@@ -15,3 +15,5 @@ instagramapi = "*"
 [dev-packages]
 
 ipdb = "*"
+pytest = "*"
+freezegun = "*"
