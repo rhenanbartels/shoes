@@ -13,11 +13,11 @@ def login():
 
 
 def get_recent_media(api, user, delta=30):
-    last_30_min = (
+    time_delta = (
             datetime.utcnow() - timedelta(minutes=delta)
     ).timestamp()
     try:
-        media = api.getTotalUserFeed(user['pk'], minTimestamp=int(last_30_min))
+        media = api.getTotalUserFeed(user['pk'], minTimestamp=int(time_delta))
     except KeyError:
         media = []
 
