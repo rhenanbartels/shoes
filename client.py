@@ -22,3 +22,8 @@ def get_recent_media(api, user, delta=30):
         media = []
 
     return media
+
+
+def get_stories(api, user):
+    api.SendRequest('feed/user/' + str(user['pk']) + '/reel_media/')
+    return api.LastJson
