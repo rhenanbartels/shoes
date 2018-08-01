@@ -2,7 +2,7 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from client import get_recent_media, get_stories
+from client_instagram import get_recent_media, get_stories
 from fixtures import followers
 
 
@@ -32,3 +32,6 @@ def test_get_stories():
             'feed/user/1234/reel_media/'
     )
     assert stories == {'items': [1, 2, 3]}
+
+
+# https://github.com/Hironsan/google-vision-sampler
