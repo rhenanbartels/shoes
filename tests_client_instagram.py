@@ -13,11 +13,11 @@ def test_get_recent_media():
             {'media': 'media1'},
     ]
 
-    media = get_recent_media(api_mock, followers[0], delta=30)
+    media = get_recent_media(api_mock, followers[0], delta=1440)
 
     api_mock.getTotalUserFeed.assert_called_once_with(
             1234,
-            minTimestamp=1531924200,
+            minTimestamp=1531839600,
     )
     assert media == [{'media': 'media1'}]
 
