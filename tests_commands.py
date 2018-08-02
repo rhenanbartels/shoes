@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from unittest import mock
 
-from commands import update_users, search_media
-from fixtures import media_resp_1, media_resp_2
+from commands import update_users, search_media, search_stories
+from fixtures import media_resp_1, media_resp_2, storie_resp_1, storie_resp_2
 
 
 def test_save_followings():
@@ -118,3 +118,37 @@ def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
 
     _get_recent_media.assert_has_calls(media_calls)
     document_mock.insert_one.assert_called_once_with(expected_media_1[0])
+
+
+@mock.patch('commands.visual_api')
+@mock.patch('commands.get_stories')
+def test_save_media_from_stories(_get_stories, _visual_api):
+    users = [
+        {'username': 'username1', 'pk': 1234},
+        {'username': 'username1', 'pk': 5678}
+    ]
+
+    api_mock = mock.MagicMock()
+    _get_stories.side_effect = [storie_resp_1, storie_resp_2]
+    document_mock = mock.MagicMock()
+
+    expected_storie_1 = deepcopy(storie_resp_1)
+    expected_storie_2 = deepcopy(storie_resp_2)
+    expected_storie_1['items'][0]['source'] = 'story'
+    expected_storie_2['items'][0]['source'] = 'story'
+    expected_storie_2['items'][1]['source'] = 'story'
+
+    stories_calls = [
+            mock.call(api_mock, users[0]),
+            mock.call(api_mock, users[1])
+    ]
+    document_db_calls = [
+            mock.call(expected_storie_1['items'][0]),
+            mock.call(expected_storie_2['items'][0]),
+            mock.call(expected_storie_2['items'][1])
+    ]
+
+    search_stories(api_mock, document_mock, users)
+
+    _get_stories.assert_has_calls(stories_calls)
+    document_mock.insert_one.assert_has_calls(document_db_calls)

@@ -45,3 +45,45 @@ media_resp_2 = [
          'pk': 5678
          }}
 ]
+
+storie_resp_1 = {
+        'items': [
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_1'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_1'}
+                    ],
+                },
+             'media_type': 1
+             },
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_2'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_2'}
+                    ],
+                },
+             'media_type': 2
+             }
+            ]
+        }
+
+storie_resp_2 = {
+        'items': [
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_3'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_3'}
+                    ],
+                },
+             'media_type': 1
+             },
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_4'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_4'}
+                    ],
+                },
+             'media_type': 1
+             }
+            ]
+        }

@@ -1,5 +1,5 @@
 from client_google_visual import visual_api
-from client_instagram import get_recent_media
+from client_instagram import get_recent_media, get_stories
 
 
 def update_users(db_document, users, origin):
@@ -21,3 +21,14 @@ def search_media(api, db_document, users, source, delta=1440):
                 if is_target:
                     media['source'] = source
                     db_document.insert_one(media)
+
+
+def search_stories(api, db_document, users):
+    for user in users:
+        stories = get_stories(api, user)
+        for storie in stories['items']:
+            if storie['media_type'] == 1:
+                is_target = visual_api()
+                if is_target:
+                    storie['source'] = 'story'
+                    db_document.insert_one(storie)
