@@ -1,14 +1,18 @@
+from copy import deepcopy
+from datetime import datetime
+
 from client_google_visual import visual_api
 from client_instagram import get_recent_media, get_stories
 
 
 def update_users(db_collection, users, origin):
+    now = datetime.utcnow().timestamp()
+    users = deepcopy(users)
     for user in users:
-        pk = user['pk']
+        pk = user.pop('pk')
         user['origin'] = origin
-        db_collection.find_one_and_update(
-                {'pk': pk}, {'$set': user}, upsert=True
-        )
+        user['last_visited'] = now
+        db_collection.update_one({'pk': pk}, {'$set': user}, upsert=True)
 
 
 def search_feed_media(api, db_collection, user, delta=1440):

@@ -4,8 +4,10 @@ from unittest import mock
 
 from commands import update_users, search_feed_media, search_stories
 from fixtures import media_resp_1, media_resp_2, storie_resp_1, storie_resp_2
+from freezegun import freeze_time
 
 
+@freeze_time('2018-08-02 12:00:00')
 def test_save_followings():
     followings = [
             {'username': 'username1', 'pk': 1234},
@@ -20,21 +22,26 @@ def test_save_followings():
             mock.call(
                 {'pk': 1234},
                 {'$set': {
-                    'pk': 1234, 'username': 'username1', 'origin': 'following'
+                    'username': 'username1', 'origin': 'following',
+                    'last_visited': 1533222000
                 }
                 },
                 upsert=True),
             mock.call(
                 {'pk': 5678},
                 {'$set': {
-                    'pk': 5678, 'username': 'username2', 'origin': 'following'
+                    'username': 'username2', 'origin': 'following',
+                    'last_visited': 1533222000
                 }
                 },
                 upsert=True)
     ]
-    collection_mock.find_one_and_update.assert_has_calls(calls)
+    collection_mock.update_one.assert_has_calls(calls)
+    assert followings[0] == {'username': 'username1', 'pk': 1234}
+    assert followings[1] == {'username': 'username2', 'pk': 5678}
 
 
+@freeze_time('2018-08-02 12:00:00')
 def test_save_followers():
     followers = [
             {'username': 'username1', 'pk': 1234},
@@ -49,19 +56,23 @@ def test_save_followers():
             mock.call(
                 {'pk': 1234},
                 {'$set': {
-                    'pk': 1234, 'username': 'username1', 'origin': 'follower'
+                    'username': 'username1', 'origin': 'follower',
+                    'last_visited': 1533222000
                 }
                 },
                 upsert=True),
             mock.call(
                 {'pk': 5678},
                 {'$set': {
-                    'pk': 5678, 'username': 'username2', 'origin': 'follower'
+                    'username': 'username2', 'origin': 'follower',
+                    'last_visited': 1533222000
                 }
                 },
                 upsert=True)
     ]
-    collection_mock.find_one_and_update.assert_has_calls(calls)
+    collection_mock.update_one.assert_has_calls(calls)
+    assert followers[0] == {'username': 'username1', 'pk': 1234}
+    assert followers[1] == {'username': 'username2', 'pk': 5678}
 
 
 @mock.patch('commands.visual_api')
