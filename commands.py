@@ -25,6 +25,7 @@ def search_feed_media(api, db_collection, user, delta=1440):
             is_target = visual_api()
             if is_target:
                 media['source'] = 'feed'
+                media['is_target'] = is_target
                 db_collection.insert_one(media)
 
 
@@ -35,4 +36,5 @@ def search_stories(api, db_collection, user):
             is_target = visual_api()
             if is_target:
                 storie['source'] = 'story'
+                storie['is_target'] = is_target
                 db_collection.insert_one(storie)

@@ -80,6 +80,7 @@ def test_save_media(_get_recent_media, _visual_api):
 
     expected_media = deepcopy(media_resp_1)
     expected_media[0]['source'] = 'feed'
+    expected_media[0]['is_target'] = True
 
     _get_recent_media.side_effect = [media_resp_1, media_resp_2]
     api_mock = mock.MagicMock()
@@ -102,6 +103,7 @@ def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
     expected_media_1 = deepcopy(media_resp_1)
     expected_media_1[0]['source'] = 'feed'
     expected_media_1[1]['source'] = 'feed'
+    expected_media_1[0]['is_target'] = True
 
     _get_recent_media.side_effect = [media_resp_1, media_resp_2]
     api_mock = mock.MagicMock()
@@ -120,12 +122,14 @@ def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
 def test_save_media_from_stories(_get_stories, _visual_api):
     user = {'username': 'username1', 'pk': 1234}
 
+    _visual_api.return_value = True
     api_mock = mock.MagicMock()
     _get_stories.side_effect = [storie_resp_1, storie_resp_2]
     collection_mock = mock.MagicMock()
 
     expected_storie = deepcopy(storie_resp_1)
     expected_storie['items'][0]['source'] = 'story'
+    expected_storie['items'][0]['is_target'] = True
 
     search_stories(api_mock, collection_mock, user)
 
