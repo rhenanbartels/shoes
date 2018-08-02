@@ -20,18 +20,16 @@ def test_save_followings():
 
     calls = [
             mock.call(
-                {'pk': 1234},
+                {'pk': 1234, 'origin': 'following'},
                 {'$set': {
-                    'username': 'username1', 'origin': 'following',
-                    'last_visited': 1533222000
+                    'username': 'username1', 'last_visited': 1533222000
                 }
                 },
                 upsert=True),
             mock.call(
-                {'pk': 5678},
+                {'pk': 5678, 'origin': 'following'},
                 {'$set': {
-                    'username': 'username2', 'origin': 'following',
-                    'last_visited': 1533222000
+                    'username': 'username2', 'last_visited': 1533222000
                 }
                 },
                 upsert=True)
@@ -54,18 +52,16 @@ def test_save_followers():
 
     calls = [
             mock.call(
-                {'pk': 1234},
+                {'pk': 1234, 'origin': 'follower'},
                 {'$set': {
-                    'username': 'username1', 'origin': 'follower',
-                    'last_visited': 1533222000
+                    'username': 'username1', 'last_visited': 1533222000
                 }
                 },
                 upsert=True),
             mock.call(
-                {'pk': 5678},
+                {'pk': 5678, 'origin': 'follower'},
                 {'$set': {
-                    'username': 'username2', 'origin': 'follower',
-                    'last_visited': 1533222000
+                    'username': 'username2', 'last_visited': 1533222000
                 }
                 },
                 upsert=True)

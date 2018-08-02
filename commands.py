@@ -10,9 +10,11 @@ def update_users(db_collection, users, origin):
     users = deepcopy(users)
     for user in users:
         pk = user.pop('pk')
-        user['origin'] = origin
         user['last_visited'] = now
-        db_collection.update_one({'pk': pk}, {'$set': user}, upsert=True)
+        db_collection.update_one(
+                {'pk': pk, 'origin': origin},
+                {'$set': user}, upsert=True
+        )
 
 
 def search_feed_media(api, db_collection, user, delta=1440):
