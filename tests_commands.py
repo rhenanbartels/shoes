@@ -5,6 +5,7 @@ from unittest import mock
 from commands import update_users, search_feed_media, search_stories
 from fixtures import media_resp_1, media_resp_2, storie_resp_1, storie_resp_2
 
+# TODO: document -> collection
 
 def test_save_followings():
     followings = [
