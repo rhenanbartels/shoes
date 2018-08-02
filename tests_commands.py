@@ -5,7 +5,6 @@ from unittest import mock
 from commands import update_users, search_feed_media, search_stories
 from fixtures import media_resp_1, media_resp_2, storie_resp_1, storie_resp_2
 
-# TODO: document -> collection
 
 def test_save_followings():
     followings = [
@@ -13,9 +12,9 @@ def test_save_followings():
             {'username': 'username2', 'pk': 5678}
     ]
 
-    document_mock = mock.MagicMock()
+    collection_mock = mock.MagicMock()
 
-    update_users(document_mock, followings, origin='following')
+    update_users(collection_mock, followings, origin='following')
 
     calls = [
             mock.call(
@@ -33,7 +32,7 @@ def test_save_followings():
                 },
                 upsert=True)
     ]
-    document_mock.find_one_and_update.assert_has_calls(calls)
+    collection_mock.find_one_and_update.assert_has_calls(calls)
 
 
 def test_save_followers():
@@ -42,9 +41,9 @@ def test_save_followers():
             {'username': 'username2', 'pk': 5678}
     ]
 
-    document_mock = mock.MagicMock()
+    collection_mock = mock.MagicMock()
 
-    update_users(document_mock, followers, origin='follower')
+    update_users(collection_mock, followers, origin='follower')
 
     calls = [
             mock.call(
