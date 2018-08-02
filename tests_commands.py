@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from unittest import mock
 
-from commands import update_users, search_media, search_stories
+from commands import update_users, search_feed_media, search_stories
 from fixtures import media_resp_1, media_resp_2, storie_resp_1, storie_resp_2
 
 
@@ -91,7 +91,7 @@ def test_save_media(_get_recent_media, _visual_api):
 
     document_mock = mock.MagicMock()
 
-    search_media(api_mock, document_mock, followers, source='feed')
+    search_feed_media(api_mock, document_mock, followers)
 
     _get_recent_media.assert_has_calls(media_calls)
     document_mock.insert_one.assert_has_calls(document_db_calls)
@@ -114,7 +114,7 @@ def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
 
     document_mock = mock.MagicMock()
 
-    search_media(api_mock, document_mock, users, source='feed')
+    search_feed_media(api_mock, document_mock, users)
 
     _get_recent_media.assert_has_calls(media_calls)
     document_mock.insert_one.assert_called_once_with(expected_media_1[0])

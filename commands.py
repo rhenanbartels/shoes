@@ -11,7 +11,7 @@ def update_users(db_document, users, origin):
         )
 
 
-def search_media(api, db_document, users, source, delta=1440):
+def search_feed_media(api, db_document, users, delta=1440):
     for user in users:
         medias = get_recent_media(api, user, delta)
         for media in medias:
@@ -19,7 +19,7 @@ def search_media(api, db_document, users, source, delta=1440):
             if 'image_versions2' in media:
                 is_target = visual_api()
                 if is_target:
-                    media['source'] = source
+                    media['source'] = 'feed'
                     db_document.insert_one(media)
 
 
