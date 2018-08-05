@@ -87,3 +87,149 @@ storie_resp_2 = {
              }
             ]
         }
+
+visual_api_non_target = {"labelAnnotations": [
+    {
+      "mid": "/m/04_fs",
+      "description": "muscle",
+      "score": 0.7627564,
+      "topicality": 0.7627564
+    },
+    {
+      "mid": "/m/0dzf4",
+      "description": "arm",
+      "score": 0.75626075,
+      "topicality": 0.75626075
+    },
+    {
+      "mid": "/m/02p0tk3",
+      "description": "human body",
+      "score": 0.74117637,
+      "topicality": 0.74117637
+    },
+    {
+      "mid": "/m/035r7c",
+      "description": "leg",
+      "score": 0.7064597,
+      "topicality": 0.7064597
+    },
+    {
+      "mid": "/m/0k65p",
+      "description": "hand",
+      "score": 0.61223406,
+      "topicality": 0.61223406
+    },
+    {
+      "mid": "/m/05y5lj",
+      "description": "sports equipment",
+      "score": 0.565478,
+      "topicality": 0.565478
+    },
+    {
+      "mid": "/m/06bm2",
+      "description": "recreation",
+      "score": 0.56316197,
+      "topicality": 0.56316197
+    },
+    {
+      "mid": "/m/0dm6dl",
+      "description": "barechestedness",
+      "score": 0.5615934,
+      "topicality": 0.5615934
+    }
+  ]
+}
+
+visual_api_target = {
+  "labelAnnotations": [
+    {
+      "mid": "/m/09j5n",
+      "description": "footwear",
+      "score": 0.97527814,
+      "topicality": 0.97527814
+    },
+    {
+      "mid": "/m/06rrc",
+      "description": "shoe",
+      "score": 0.90856355,
+      "topicality": 0.90856355
+    },
+    {
+      "mid": "/m/035r7c",
+      "description": "leg",
+      "score": 0.8656675,
+      "topicality": 0.8656675
+    },
+    {
+      "mid": "/m/01dvt1",
+      "description": "joint",
+      "score": 0.8487657,
+      "topicality": 0.8487657
+    },
+    {
+      "mid": "/m/09w5r",
+      "description": "human leg",
+      "score": 0.82455796,
+      "topicality": 0.82455796
+    },
+    {
+      "mid": "/m/0715t2",
+      "description": "calf",
+      "score": 0.7601689,
+      "topicality": 0.7601689
+    },
+    {
+      "mid": "/m/02p0tk3",
+      "description": "human body",
+      "score": 0.74117637,
+      "topicality": 0.74117637
+    },
+    {
+      "mid": "/m/0dzf4",
+      "description": "arm",
+      "score": 0.718239,
+      "topicality": 0.718239
+    },
+    {
+      "mid": "/m/019swr",
+      "description": "knee",
+      "score": 0.69414085,
+      "topicality": 0.69414085
+    },
+    {
+      "mid": "/m/05y5lj",
+      "description": "sports equipment",
+      "score": 0.6789266,
+      "topicality": 0.6789266
+    },
+    {
+      "mid": "/m/031n1",
+      "description": "foot",
+      "score": 0.65484965,
+      "topicality": 0.65484965
+    },
+    {
+      "mid": "/m/06bm2",
+      "description": "recreation",
+      "score": 0.64873284,
+      "topicality": 0.64873284
+    },
+    {
+      "mid": "/m/04_fs",
+      "description": "muscle",
+      "score": 0.6399608,
+      "topicality": 0.6399608
+    },
+    {
+      "mid": "/m/0hgrj75",
+      "description": "outdoor shoe",
+      "score": 0.6220674,
+      "topicality": 0.6220674
+    },
+    {
+      "mid": "/m/0hr8",
+      "description": "asphalt",
+      "score": 0.53616446,
+      "topicality": 0.53616446
+    }
+  ]} 
