@@ -1,5 +1,9 @@
-from client_google_visual import find_keywords
-from fixtures import visual_api_non_target, visual_api_target
+import responses
+
+from decouple import config
+
+from client_google_vision import find_keywords
+from fixtures import vision_api_non_target, vision_api_target
 
 
 def test_find_target_keywords():

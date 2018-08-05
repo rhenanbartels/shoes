@@ -88,7 +88,7 @@ storie_resp_2 = {
             ]
         }
 
-visual_api_non_target = {"labelAnnotations": [
+vision_api_non_target = {"labelAnnotations": [
     {
       "mid": "/m/04_fs",
       "description": "muscle",
@@ -140,7 +140,7 @@ visual_api_non_target = {"labelAnnotations": [
   ]
 }
 
-visual_api_target = {
+vision_api_target = {
   "labelAnnotations": [
     {
       "mid": "/m/09j5n",

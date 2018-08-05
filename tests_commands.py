@@ -71,12 +71,12 @@ def test_save_followers():
     assert followers[1] == {'username': 'username2', 'pk': 5678}
 
 
-@mock.patch('commands.visual_api')
+@mock.patch('commands.vision_api')
 @mock.patch('commands.get_recent_media')
-def test_save_media(_get_recent_media, _visual_api):
+def test_save_media(_get_recent_media, _vision_api):
     user = {'username': 'username1', 'pk': 1234},
 
-    _visual_api.side_effect = [True, False]
+    _vision_api.side_effect = [True, False]
 
     expected_media = deepcopy(media_resp_1)
     expected_media[0]['source'] = 'feed'
@@ -93,12 +93,12 @@ def test_save_media(_get_recent_media, _visual_api):
     collection_mock.insert_one.assert_called_once_with(expected_media[0])
 
 
-@mock.patch('commands.visual_api')
+@mock.patch('commands.vision_api')
 @mock.patch('commands.get_recent_media')
-def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
+def test_save_media_only_with_shoes(_get_recent_media, _vision_api):
     user = {'username': 'username1', 'pk': 1234}
 
-    _visual_api.side_effect = [True, False]
+    _vision_api.side_effect = [True, False]
 
     expected_media_1 = deepcopy(media_resp_1)
     expected_media_1[0]['source'] = 'feed'
@@ -117,12 +117,12 @@ def test_save_media_only_with_shoes(_get_recent_media, _visual_api):
     collection_mock.insert_one.assert_called_once_with(expected_media_1[0])
 
 
-@mock.patch('commands.visual_api')
+@mock.patch('commands.vision_api')
 @mock.patch('commands.get_stories')
-def test_save_media_from_stories(_get_stories, _visual_api):
+def test_save_media_from_stories(_get_stories, _vision_api):
     user = {'username': 'username1', 'pk': 1234}
 
-    _visual_api.return_value = True
+    _vision_api.return_value = True
     api_mock = mock.MagicMock()
     _get_stories.side_effect = [storie_resp_1, storie_resp_2]
     collection_mock = mock.MagicMock()
@@ -139,15 +139,15 @@ def test_save_media_from_stories(_get_stories, _visual_api):
     )
 
 
-@mock.patch('commands.visual_api')
+@mock.patch('commands.vision_api')
 @mock.patch('commands.get_recent_media')
 def test_save_samples_of_non_target_images_from_feed(
-        _get_recent_media, _visual_api):
+        _get_recent_media, _vision_api):
 
     user = {'username': 'username1', 'pk': 1234}
 
     # In this test case all images are non target
-    _visual_api.side_effect = [False is True for i in range(10)]
+    _vision_api.side_effect = [False is True for i in range(10)]
     collection_mock = mock.MagicMock()
     _get_recent_media.return_value = [
             {'non_image': None},
@@ -170,15 +170,15 @@ def test_save_samples_of_non_target_images_from_feed(
     )
 
 
-@mock.patch('commands.visual_api')
+@mock.patch('commands.vision_api')
 @mock.patch('commands.get_stories')
 def test_save_samples_of_non_target_images_from_stories(
-        _get_stories, _visual_api):
+        _get_stories, _vision_api):
 
     user = {'username': 'username1', 'pk': 1234}
 
     # In this test case all images are non target
-    _visual_api.side_effect = [False is True for i in range(10)]
+    _vision_api.side_effect = [False is True for i in range(10)]
     collection_mock = mock.MagicMock()
     _get_stories.return_value = {
             'items':

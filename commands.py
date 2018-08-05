@@ -3,7 +3,7 @@ import math
 from copy import deepcopy
 from datetime import datetime
 
-from client_google_visual import visual_api
+from client_google_vision import vision_api
 from client_instagram import get_recent_media, get_stories
 
 
@@ -30,7 +30,7 @@ def search_feed_media(api, db_collection, user, delta=1440,
     for media in medias:
         # Check if media contains a photo
         if 'image_versions2' in media:
-            is_target = visual_api()
+            is_target = vision_api()
             media['source'] = 'feed'
             if is_target:
                 media['is_target'] = is_target
@@ -48,7 +48,7 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
     count = 0
     for storie in stories['items']:
         if storie['media_type'] == 1:
-            is_target = visual_api()
+            is_target = vision_api()
             storie['source'] = 'story'
             if is_target:
                 storie['is_target'] = is_target

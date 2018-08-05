@@ -4,7 +4,7 @@ from decouple import config, Csv
 TARGET_KEYWORDS = config('TARGET_KEYWORDS', cast=Csv())
 
 
-def visual_api():
+def vision_api():
     return True
 
 
