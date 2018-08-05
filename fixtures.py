@@ -17,3 +17,73 @@ followers = [{'full_name': 'name1',
         'profile_pic_url': 'url_2',
         'reel_auto_archive': 'on',
         'username': 'username2'}]
+
+media_resp_1 = [
+        {'image_versions2': {
+            'candidates': [
+                {'height': 868, 'width': 750, 'url': 'image_url_0'},
+                {'height': 278, 'width': 240, 'url': 'short_img_url_)'}
+            ],
+         'pk': 1234
+         }},
+        {"non-image_field": None,
+         'pk': 1234},
+]
+media_resp_2 = [
+        {'image_versions2': {
+            'candidates': [
+                {'height': 868, 'width': 750, 'url': 'image_url_1'},
+                {'height': 278, 'width': 240, 'url': 'short_img_url_1'}
+            ],
+         'pk': 5678
+         }},
+        {'image_versions2': {
+            'candidates': [
+                {'height': 868, 'width': 750, 'url': 'image_url_2'},
+                {'height': 278, 'width': 240, 'url': 'short_img_url_2'}
+            ],
+         'pk': 5678
+         }}
+]
+
+storie_resp_1 = {
+        'items': [
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_1'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_1'}
+                    ],
+                },
+             'media_type': 1
+             },
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_2'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_2'}
+                    ],
+                },
+             'media_type': 2
+             }
+            ]
+        }
+
+storie_resp_2 = {
+        'items': [
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_3'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_3'}
+                    ],
+                },
+             'media_type': 1
+             },
+            {'image_versions2': {
+                'candidates': [
+                    {'height': 868, 'width': 750, 'url': 'image_url_4'},
+                    {'height': 278, 'width': 240, 'url': 'short_img_url_4'}
+                    ],
+                },
+             'media_type': 1
+             }
+            ]
+        }

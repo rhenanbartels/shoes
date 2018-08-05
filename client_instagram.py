@@ -12,7 +12,7 @@ def login():
     return api
 
 
-def get_recent_media(api, user, delta=30):
+def get_recent_media(api, user, delta):
     time_delta = (
             datetime.utcnow() - timedelta(minutes=delta)
     ).timestamp()

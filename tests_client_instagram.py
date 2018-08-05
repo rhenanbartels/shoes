@@ -2,7 +2,7 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from client import get_recent_media, get_stories
+from client_instagram import get_recent_media, get_stories
 from fixtures import followers
 
 
@@ -13,11 +13,11 @@ def test_get_recent_media():
             {'media': 'media1'},
     ]
 
-    media = get_recent_media(api_mock, followers[0], delta=30)
+    media = get_recent_media(api_mock, followers[0], delta=1440)
 
     api_mock.getTotalUserFeed.assert_called_once_with(
             1234,
-            minTimestamp=1531924200,
+            minTimestamp=1531839600,
     )
     assert media == [{'media': 'media1'}]
 
@@ -32,3 +32,6 @@ def test_get_stories():
             'feed/user/1234/reel_media/'
     )
     assert stories == {'items': [1, 2, 3]}
+
+
+# https://github.com/Hironsan/google-vision-sampler
