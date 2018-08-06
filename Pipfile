@@ -11,6 +11,7 @@ python-decouple = "*"
 requests = "*"
 instagramapi = "*"
 pymongo = "*"
+pillow = "*"
 
 
 [dev-packages]
@@ -18,3 +19,4 @@ pymongo = "*"
 ipdb = "*"
 pytest = "*"
 freezegun = "*"
+responses = "*"
