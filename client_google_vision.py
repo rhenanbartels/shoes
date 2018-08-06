@@ -15,7 +15,11 @@ TOKEN = config('VISION_TOKEN')
 def vision_api(image_url):
     response = requests.get(image_url)
     base64_image = _prepare_image(response)
-    return find_keywords(get_identified_labels(base64_image))
+    is_target = find_keywords(get_identified_labels(base64_image))
+    if is_target:
+        return is_target
+
+    return find_keywords(get_identified_labels(crop_image(response.content)))
 
 
 def get_identified_labels(base64_image):
