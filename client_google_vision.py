@@ -1,7 +1,10 @@
 import base64
 import requests
 
+from io import BytesIO
+
 from decouple import config, Csv
+from PIL import Image
 
 
 TARGET_KEYWORDS = config('TARGET_KEYWORDS', cast=Csv())
@@ -38,6 +41,16 @@ def get_identified_labels(base64_image):
 def find_keywords(json_response):
     keys = json_response.get('labelAnnotations', [])
     return any([key['description'] in TARGET_KEYWORDS for key in keys])
+
+
+def crop_image(img, prop=0.5):
+    img_pillow = Image.open(BytesIO(img))
+    h = img_pillow.height
+    w = img_pillow.width
+    cropped_img = img_pillow.crop((0, h * prop, w, h))
+    img_buffer = BytesIO()
+    cropped_img.save(img_buffer, format='PNG')
+    return base64.b64encode(img_buffer.getvalue()).decode()
 
 
 def _prepare_image(response):

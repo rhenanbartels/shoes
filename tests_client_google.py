@@ -1,12 +1,14 @@
 import base64
-
-from unittest import mock
-
 import responses
 
-from decouple import config
+from io import BytesIO
 
-from client_google_vision import find_keywords, get_identified_labels
+from decouple import config
+from PIL import Image
+
+from client_google_vision import (find_keywords,
+                                  get_identified_labels,
+                                  crop_image)
 from fixtures import vision_api_non_target, vision_api_target
 
 
@@ -40,7 +42,14 @@ def test_get_google_vision_api_response():
     assert labels == vision_api_non_target['responses'][0]
 
 
-@mock.patch('client_google_vision.get_identified_labels')
-@mock.patch('client_google_vision.requests.get')
-def test_vision_api_use(_get, _get_labels):
-    pass
+def test_crop_image():
+    with open('test_images/vision_test_image.jpg', 'rb') as image:
+        img = image.read()
+        cropped_img = crop_image(img, prop=0.5)
+        cropped_img_pil = Image.open(BytesIO(base64.b64decode(cropped_img)))
+
+        expected_height = 427
+        expected_width = 1280
+
+        assert cropped_img_pil.height == expected_height
+        assert cropped_img_pil.width == expected_width
