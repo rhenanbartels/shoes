@@ -19,6 +19,7 @@ def update_users(db_collection, users, origin):
         )
 
 
+# TODO: save str image
 def search_feed_media(api, db_collection, user, delta=1440,
                       percent_non_target=0.1):
     medias = get_recent_media(api, user, delta)
@@ -42,6 +43,7 @@ def search_feed_media(api, db_collection, user, delta=1440,
                 count += 1
 
 
+# TODO: save str imgage
 def search_stories(api, db_collection, user, percent_non_target=0.1):
     stories = get_stories(api, user)
     n_non_target = max(math.floor(len(stories) * percent_non_target), 1)
