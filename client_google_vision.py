@@ -32,7 +32,7 @@ def get_identified_labels(base64_image):
             },
             'features': [{
                 'type': 'LABEL_DETECTION',
-                'maxResults': 5,
+                'maxResults': 10,
             }]
 
         }]
