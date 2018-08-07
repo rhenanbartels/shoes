@@ -30,7 +30,8 @@ def search_feed_media(api, db_collection, user, delta=1440,
     for media in medias:
         # Check if media contains a photo
         if 'image_versions2' in media:
-            is_target = vision_api()
+            image_url = media['image_versions2']['candidates'][0]['url']
+            is_target = vision_api(image_url)
             media['source'] = 'feed'
             if is_target:
                 media['is_target'] = is_target
@@ -48,7 +49,8 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
     count = 0
     for storie in stories['items']:
         if storie['media_type'] == 1:
-            is_target = vision_api()
+            image_url = storie['image_versions2']['candidates'][0]['url']
+            is_target = vision_api(image_url)
             storie['source'] = 'story'
             if is_target:
                 storie['is_target'] = is_target
@@ -56,3 +58,4 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
             elif count < n_non_target:
                 storie['is_target'] = is_target
                 db_collection.insert_one(storie)
+                count += 1

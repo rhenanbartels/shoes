@@ -91,6 +91,7 @@ def test_save_media(_get_recent_media, _vision_api):
 
     _get_recent_media.assert_called_once_with(api_mock, user, 1440)
     collection_mock.insert_one.assert_called_once_with(expected_media[0])
+    _vision_api.assert_called_once_with('image_url_0')
 
 
 @mock.patch('commands.vision_api')
@@ -137,6 +138,7 @@ def test_save_media_from_stories(_get_stories, _vision_api):
     collection_mock.insert_one.assert_called_once_with(
             expected_storie['items'][0]
     )
+    _vision_api.assert_called_once_with('image_url_1')
 
 
 @mock.patch('commands.vision_api')
@@ -151,11 +153,11 @@ def test_save_samples_of_non_target_images_from_feed(
     collection_mock = mock.MagicMock()
     _get_recent_media.return_value = [
             {'non_image': None},
-            {'image_versions2': 'image_0'},
+            {'image_versions2': {'candidates': [{'url': 'image_0'}]}},
             {'non_image': None},
             {'non_image': None},
             {'non_image': None},
-            {'image_versions2': 'image_1'},
+            {'image_versions2': {'candidates': [{'url': 'image_1'}]}},
     ]
 
     api_mock = mock.MagicMock()
@@ -163,7 +165,7 @@ def test_save_samples_of_non_target_images_from_feed(
 
     collection_mock.insert_one.assert_called_once_with(
             {
-             'image_versions2': 'image_0',
+             'image_versions2': {'candidates': [{'url': 'image_0'}]},
              'source': 'feed',
              'is_target': False
             }
@@ -183,19 +185,20 @@ def test_save_samples_of_non_target_images_from_stories(
     _get_stories.return_value = {
             'items':
             [{'media_type': 2},
-             {'media_type': 1, 'image_versions2': 'image_0'},
+             {'image_versions2': {'candidates': [{'url': 'image_0'}]},
+              'media_type': 1},
              {'media_type': 2},
              {'media_type': 2},
              {'media_type': 2},
-             {'media_type': '1', 'image_versions2': 'image_1'}]
-            }
+             {'image_versions2': {'candidates': [{'url': 'image_1'}]},
+              'media_type': 1}]}
 
     api_mock = mock.MagicMock()
     search_stories(api_mock, collection_mock, user)
 
     collection_mock.insert_one.assert_called_once_with(
             {
-             'image_versions2': 'image_0',
+             'image_versions2': {'candidates': [{'url': 'image_0'}]},
              'source': 'story',
              'is_target': False,
              'media_type': 1
