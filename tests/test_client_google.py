@@ -46,8 +46,8 @@ def test_get_google_vision_api_response():
 
 def test_crop_image():
     with open('tests/test_images/vision_test_image.jpg', 'rb') as image:
-        img = image.read()
-        cropped_img = crop_image(img, prop=0.5)
+        img = base64.b64encode(image.read()).decode()
+        cropped_img = crop_image(img, prop=(0.5, 1.0))
         cropped_img_pil = Image.open(BytesIO(base64.b64decode(cropped_img)))
 
         expected_height = 427
@@ -58,9 +58,10 @@ def test_crop_image():
 
 
 @mock.patch('client_google_vision.get_identified_labels')
+@mock.patch('client_google_vision.crop_image', return_value='cropped')
 @mock.patch('client_google_vision._prepare_image', return_value='prepared')
 @mock.patch('client_google_vision.requests.get', return_value='response')
-def test_vision_api_pipeline(_get, _prepare_image, _get_labels):
+def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels):
     _get_labels.return_value = {
             'labelAnnotations': [{'description': 'shoe'}]
     }
@@ -69,7 +70,8 @@ def test_vision_api_pipeline(_get, _prepare_image, _get_labels):
 
     _get.assert_called_once_with('image_url')
     _prepare_image.assert_called_once_with('response')
-    _get_labels.assert_called_once_with('prepared')
+    _crop_image.assert_called_once_with('prepared', (0, 1.0))
+    _get_labels.assert_called_once_with('cropped')
     assert is_target is True
 
 
@@ -92,9 +94,11 @@ def test_vision_api_pipeline_with_half_img(_get, _prepare_image, _get_labels,
     is_target, _ = vision_api('image_url')
 
     get_labels_calls = [mock.call('prepared'), mock.call('cropped')]
+    crop_image_calls = [mock.call('prepared', (0.0, 1.0)),
+                        mock.call('prepared', (0.5, 1.0))]
 
     _get.assert_called_once_with('image_url')
     _prepare_image.assert_called_once_with(response_mock)
     _get_labels.call_args_list == get_labels_calls
-    _crop_image.assert_called_once_with('response content')
+    _crop_image.assert_has_calls(crop_image_calls)
     assert is_target is True

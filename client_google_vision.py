@@ -15,12 +15,12 @@ TOKEN = config('VISION_TOKEN')
 def vision_api(image_url):
     response = requests.get(image_url)
     base64_image = _prepare_image(response)
-    is_target = find_keywords(get_identified_labels(base64_image))
-    if is_target:
-        return is_target, base64_image
-
-    return (find_keywords(get_identified_labels(crop_image(response.content))),
-            base64_image)
+    for prop in [(0, 1.0), (0.5, 1.0), (0.75, 1.0), (0.5, 0.75)]:
+        is_target = find_keywords(
+                get_identified_labels(crop_image(base64_image, prop))
+        )
+        if is_target:
+            return is_target, base64_image
 
 
 def get_identified_labels(base64_image):
@@ -48,11 +48,11 @@ def find_keywords(json_response):
     return any([key['description'] in TARGET_KEYWORDS for key in keys])
 
 
-def crop_image(img, prop=0.5):
-    img_pillow = Image.open(BytesIO(img))
+def crop_image(img, prop=(0.5, 1.0)):
+    img_pillow = Image.open(BytesIO(base64.b64decode(img)))
     h = img_pillow.height
     w = img_pillow.width
-    cropped_img = img_pillow.crop((0, h * prop, w, h))
+    cropped_img = img_pillow.crop((0, h * prop[0], w, h * prop[1]))
     img_buffer = BytesIO()
     cropped_img.save(img_buffer, format='PNG')
     return base64.b64encode(img_buffer.getvalue()).decode()
