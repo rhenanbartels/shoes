@@ -3,7 +3,7 @@ from unittest import mock
 from freezegun import freeze_time
 
 from client_instagram import get_recent_media, get_stories
-from fixtures import followers
+from tests.fixtures import followers
 
 
 @freeze_time('2018-07-18 12:00:00')

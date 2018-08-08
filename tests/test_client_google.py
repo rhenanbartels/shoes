@@ -11,7 +11,7 @@ from client_google_vision import (find_keywords,
                                   get_identified_labels,
                                   crop_image,
                                   vision_api)
-from fixtures import vision_api_non_target, vision_api_target
+from tests.fixtures import vision_api_non_target, vision_api_target
 
 
 def test_find_target_keywords():
@@ -27,7 +27,7 @@ def test_get_google_vision_api_response():
     api_version = config('VISION_API_VERSION')
     token = config("VISION_TOKEN")
 
-    with open('test_images/vision_test_image.jpg', 'rb') as image:
+    with open('tests/test_images/vision_test_image.jpg', 'rb') as image:
         image_content = image.read()
         base64_image = base64.b64encode(image_content).decode()
 
@@ -45,7 +45,7 @@ def test_get_google_vision_api_response():
 
 
 def test_crop_image():
-    with open('test_images/vision_test_image.jpg', 'rb') as image:
+    with open('tests/test_images/vision_test_image.jpg', 'rb') as image:
         img = image.read()
         cropped_img = crop_image(img, prop=0.5)
         cropped_img_pil = Image.open(BytesIO(base64.b64decode(cropped_img)))
@@ -65,7 +65,7 @@ def test_vision_api_pipeline(_get, _prepare_image, _get_labels):
             'labelAnnotations': [{'description': 'shoe'}]
     }
 
-    is_target = vision_api('image_url')
+    is_target, _ = vision_api('image_url')
 
     _get.assert_called_once_with('image_url')
     _prepare_image.assert_called_once_with('response')
@@ -89,7 +89,7 @@ def test_vision_api_pipeline_with_half_img(_get, _prepare_image, _get_labels,
             {'labelAnnotations': [{'description': 'shoe'}]}
     ]
 
-    is_target = vision_api('image_url')
+    is_target, _ = vision_api('image_url')
 
     get_labels_calls = [mock.call('prepared'), mock.call('cropped')]
 
