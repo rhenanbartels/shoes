@@ -17,9 +17,10 @@ def vision_api(image_url):
     base64_image = _prepare_image(response)
     is_target = find_keywords(get_identified_labels(base64_image))
     if is_target:
-        return is_target
+        return is_target, base64_image
 
-    return find_keywords(get_identified_labels(crop_image(response.content)))
+    return (find_keywords(get_identified_labels(crop_image(response.content))),
+            base64_image)
 
 
 def get_identified_labels(base64_image):
