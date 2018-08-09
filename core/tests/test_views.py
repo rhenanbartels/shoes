@@ -8,3 +8,11 @@ class UsersView(TestCase):
         resp = self.client.get(url)
 
         self.assertEqual(resp.status_code, 200)
+
+
+class FeedView(TestCase):
+    def test_get_feed(self):
+        url = reverse('feed')
+        resp = self.client.get(url)
+
+        self.assertEqual(resp.status_code, 200)
