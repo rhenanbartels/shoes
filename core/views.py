@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views import View
 
@@ -9,17 +8,19 @@ N_USER_PAGE = 2
 N_MEDIA_PAGE = 2
 
 
+def paginate(collection, page, n_elements):
+    start = (page - 1) * n_elements
+    return list(collection.find({}, {'_id': 0}).skip(start).limit(n_elements))
+
+
 class UsersView(View):
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
         db_users = client.shoes.users
-        users = list(db_users.find({}, {'_id': 0}))
+        users = paginate(db_users, page_num, N_USER_PAGE)
 
-        paginator = Paginator(users, N_USER_PAGE)
-        page = paginator.page(page_num)
-
-        return JsonResponse(page.object_list, safe=False)
+        return JsonResponse(users, safe=False)
 
 
 class FeedView(View):
@@ -27,9 +28,6 @@ class FeedView(View):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        media = list(db_media.find({}, {'_id': 0}))
+        media = paginate(db_media, page_num, N_MEDIA_PAGE)
 
-        paginator = Paginator(media, N_MEDIA_PAGE)
-        page = paginator.page(page_num)
-
-        return JsonResponse(page.object_list, safe=False)
+        return JsonResponse(media, safe=False)
