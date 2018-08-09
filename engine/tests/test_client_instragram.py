@@ -2,8 +2,8 @@ from unittest import mock
 
 from freezegun import freeze_time
 
-from client_instagram import get_recent_media, get_stories
-from tests.fixtures import followers
+from engine.client_instagram import get_recent_media, get_stories
+from engine.tests.fixtures import followers
 
 
 @freeze_time('2018-07-18 12:00:00')
