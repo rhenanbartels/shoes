@@ -19,6 +19,7 @@ def update_users(db_collection, users, origin):
         )
 
 
+# TODO: save str image
 def search_feed_media(api, db_collection, user, delta=1440,
                       percent_non_target=0.1):
     medias = get_recent_media(api, user, delta)
@@ -30,8 +31,10 @@ def search_feed_media(api, db_collection, user, delta=1440,
     for media in medias:
         # Check if media contains a photo
         if 'image_versions2' in media:
-            is_target = vision_api()
+            image_url = media['image_versions2']['candidates'][0]['url']
+            is_target, image_base64 = vision_api(image_url)
             media['source'] = 'feed'
+            media['image_base64'] = image_base64
             if is_target:
                 media['is_target'] = is_target
                 db_collection.insert_one(media)
@@ -41,6 +44,7 @@ def search_feed_media(api, db_collection, user, delta=1440,
                 count += 1
 
 
+# TODO: save str imgage
 def search_stories(api, db_collection, user, percent_non_target=0.1):
     stories = get_stories(api, user)
     n_non_target = max(math.floor(len(stories) * percent_non_target), 1)
@@ -48,11 +52,14 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
     count = 0
     for storie in stories['items']:
         if storie['media_type'] == 1:
-            is_target = vision_api()
+            image_url = storie['image_versions2']['candidates'][0]['url']
+            is_target, image_base64 = vision_api(image_url)
             storie['source'] = 'story'
+            storie['image_base64'] = image_base64
             if is_target:
                 storie['is_target'] = is_target
                 db_collection.insert_one(storie)
             elif count < n_non_target:
                 storie['is_target'] = is_target
                 db_collection.insert_one(storie)
+                count += 1
