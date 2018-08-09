@@ -1,3 +1,9 @@
-from django.db import models
+from decouple import config
 
-# Create your models here.
+from pymongo import MongoClient
+
+
+client = MongoClient(
+        config('MONGO_ADDR'),
+        config('MONGO_PORT', cast=int)
+)
