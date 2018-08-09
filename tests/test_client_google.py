@@ -66,13 +66,41 @@ def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels):
             'labelAnnotations': [{'description': 'shoe'}]
     }
 
-    is_target, _ = vision_api('image_url')
+    is_target, b64_img = vision_api('image_url')
 
     _get.assert_called_once_with('image_url')
     _prepare_image.assert_called_once_with('response')
     _crop_image.assert_called_once_with('prepared', (0, 1.0))
     _get_labels.assert_called_once_with('cropped')
     assert is_target is True
+    assert b64_img == 'prepared'
+
+
+@mock.patch('client_google_vision.get_identified_labels')
+@mock.patch('client_google_vision.crop_image', return_value='cropped')
+@mock.patch('client_google_vision._prepare_image', return_value='prepared')
+@mock.patch('client_google_vision.requests.get', return_value='response')
+def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
+                                            _get_labels):
+    _get_labels.return_value = {
+            'labelAnnotations': [{'description': 'not_target'}]
+    }
+
+    is_target, b64_img = vision_api('image_url')
+    crop_image_calls = [
+            mock.call('prepared', (0.0, 1.0)),
+            mock.call('prepared', (0.5, 1.0)),
+            mock.call('prepared', (0.75, 1.0)),
+            mock.call('prepared', (0.5, 0.75))
+    ]
+    get_labels_calls = [mock.call('cropped') for i in range(3)]
+
+    _get.assert_called_once_with('image_url')
+    _prepare_image.assert_called_once_with('response')
+    _crop_image.assert_has_calls(crop_image_calls)
+    _get_labels.assert_has_calls(get_labels_calls)
+    assert is_target is False
+    assert b64_img is 'prepared'
 
 
 @mock.patch('client_google_vision.crop_image', return_value='cropped')

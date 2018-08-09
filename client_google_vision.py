@@ -22,6 +22,8 @@ def vision_api(image_url):
         if is_target:
             return is_target, base64_image
 
+    return False, base64_image
+
 
 def get_identified_labels(base64_image):
     url = 'https://vision.googleapis.com/{api_version}/images:annotate?'\
