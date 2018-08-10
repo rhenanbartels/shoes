@@ -12,6 +12,7 @@ requests = "*"
 instagramapi = "*"
 pymongo = "*"
 pillow = "*"
+django = "*"
 
 
 [dev-packages]

@@ -7,11 +7,11 @@ from unittest import mock
 from decouple import config
 from PIL import Image
 
-from client_google_vision import (find_keywords,
-                                  get_identified_labels,
-                                  crop_image,
-                                  vision_api)
-from tests.fixtures import vision_api_non_target, vision_api_target
+from engine.client_google_vision import (find_keywords,
+                                         get_identified_labels,
+                                         crop_image,
+                                         vision_api)
+from engine.tests.fixtures import vision_api_non_target, vision_api_target
 
 
 def test_find_target_keywords():
@@ -27,7 +27,7 @@ def test_get_google_vision_api_response():
     api_version = config('VISION_API_VERSION')
     token = config("VISION_TOKEN")
 
-    with open('tests/test_images/vision_test_image.jpg', 'rb') as image:
+    with open('engine/tests/test_images/vision_test_image.jpg', 'rb') as image:
         image_content = image.read()
         base64_image = base64.b64encode(image_content).decode()
 
@@ -45,7 +45,7 @@ def test_get_google_vision_api_response():
 
 
 def test_crop_image():
-    with open('tests/test_images/vision_test_image.jpg', 'rb') as image:
+    with open('engine/tests/test_images/vision_test_image.jpg', 'rb') as image:
         img = base64.b64encode(image.read()).decode()
         cropped_img = crop_image(img, prop=(0.5, 1.0))
         cropped_img_pil = Image.open(BytesIO(base64.b64decode(cropped_img)))
@@ -57,10 +57,13 @@ def test_crop_image():
         assert cropped_img_pil.width == expected_width
 
 
-@mock.patch('client_google_vision.get_identified_labels')
-@mock.patch('client_google_vision.crop_image', return_value='cropped')
-@mock.patch('client_google_vision._prepare_image', return_value='prepared')
-@mock.patch('client_google_vision.requests.get', return_value='response')
+@mock.patch('engine.client_google_vision.get_identified_labels')
+@mock.patch('engine.client_google_vision.crop_image',
+            return_value='cropped')
+@mock.patch('engine.client_google_vision._prepare_image',
+            return_value='prepared')
+@mock.patch('engine.client_google_vision.requests.get',
+            return_value='response')
 def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels):
     _get_labels.return_value = {
             'labelAnnotations': [{'description': 'shoe'}]
@@ -76,10 +79,13 @@ def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels):
     assert b64_img == 'prepared'
 
 
-@mock.patch('client_google_vision.get_identified_labels')
-@mock.patch('client_google_vision.crop_image', return_value='cropped')
-@mock.patch('client_google_vision._prepare_image', return_value='prepared')
-@mock.patch('client_google_vision.requests.get', return_value='response')
+@mock.patch('engine.client_google_vision.get_identified_labels')
+@mock.patch('engine.client_google_vision.crop_image',
+            return_value='cropped')
+@mock.patch('engine.client_google_vision._prepare_image',
+            return_value='prepared')
+@mock.patch('engine.client_google_vision.requests.get',
+            return_value='response')
 def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
                                             _get_labels):
     _get_labels.return_value = {
@@ -103,10 +109,12 @@ def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
     assert b64_img is 'prepared'
 
 
-@mock.patch('client_google_vision.crop_image', return_value='cropped')
-@mock.patch('client_google_vision.get_identified_labels')
-@mock.patch('client_google_vision._prepare_image', return_value='prepared')
-@mock.patch('client_google_vision.requests.get')
+@mock.patch('engine.client_google_vision.crop_image',
+            return_value='cropped')
+@mock.patch('engine.client_google_vision.get_identified_labels')
+@mock.patch('engine.client_google_vision._prepare_image',
+            return_value='prepared')
+@mock.patch('engine.client_google_vision.requests.get')
 def test_vision_api_pipeline_with_half_img(_get, _prepare_image, _get_labels,
                                            _crop_image):
 

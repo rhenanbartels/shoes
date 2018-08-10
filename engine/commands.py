@@ -3,8 +3,8 @@ import math
 from copy import deepcopy
 from datetime import datetime
 
-from client_google_vision import vision_api
-from client_instagram import get_recent_media, get_stories
+from engine.client_google_vision import vision_api
+from engine.client_instagram import get_recent_media, get_stories
 
 
 def update_users(db_collection, users, origin):
