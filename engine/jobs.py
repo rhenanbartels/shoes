@@ -17,6 +17,9 @@ if __name__ == "__main__":
     client = MongoClient(
             host=config('MONGO_ADDR'),
             port=config('MONGO_PORT', cast=int),
+            username=config('MONGO_USER'),
+            password=config('MONGO_PWD'),
+            authSource=config('MONGO_AUTH_DB')
     )
     db_users = client.shoes.users
     db_media = client.shoes.media
