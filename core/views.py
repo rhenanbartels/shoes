@@ -14,8 +14,8 @@ def paginate(query_cursor, page, n_elements):
     return list(query_cursor.skip(start).limit(n_elements))
 
 
-class FeedView(TemplateView):
-    template_name = 'core/feed.html'
+class IndexView(TemplateView):
+    template_name = 'core/index.html'
 
 
 class ApiUsersView(View):
