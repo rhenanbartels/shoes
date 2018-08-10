@@ -3,7 +3,7 @@ from django.test import TestCase
 
 
 class UsersView(TestCase):
-    def test_get_users(self):
+    def test_get_users(self, _client):
         url = reverse('users')
         resp = self.client.get(url)
 

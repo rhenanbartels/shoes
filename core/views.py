@@ -8,9 +8,9 @@ N_USER_PAGE = 2
 N_MEDIA_PAGE = 2
 
 
-def paginate(collection, page, n_elements):
+def paginate(query_cursor, page, n_elements):
     start = (page - 1) * n_elements
-    return list(collection.find({}, {'_id': 0}).skip(start).limit(n_elements))
+    return list(query_cursor.skip(start).limit(n_elements))
 
 
 class UsersView(View):
@@ -18,7 +18,8 @@ class UsersView(View):
         page_num = int(request.GET.get('page', 1))
 
         db_users = client.shoes.users
-        users = paginate(db_users, page_num, N_USER_PAGE)
+        cursor = db_users.find({}, {'_id': 0})
+        users = paginate(cursor, page_num, N_USER_PAGE)
 
         return JsonResponse(users, safe=False)
 
@@ -28,6 +29,7 @@ class FeedView(View):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        media = paginate(db_media, page_num, N_MEDIA_PAGE)
+        cursor = db_media.find({}, {'_id': 0})
+        media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
