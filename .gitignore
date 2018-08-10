@@ -4,3 +4,5 @@ __pycache__
 settings.ini
 .pytest_cache/
 db.sqlite3
+media.json
+users.json

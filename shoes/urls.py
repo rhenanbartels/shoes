@@ -16,11 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from core.views import UsersView, FeedView
+from core.views import ApiUsersView, ApiFeedView, FeedView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', UsersView.as_view(), name='users'),
-    path('feed/', FeedView.as_view(), name='feed')
+    path('api/users/', ApiUsersView.as_view(), name='api_users'),
+    path('api/feed/', ApiFeedView.as_view(), name='api_feed'),
+    path('feed/', FeedView.as_view(), name='feed'),
 ]
