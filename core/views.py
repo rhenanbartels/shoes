@@ -36,7 +36,7 @@ class ApiFeedView(View):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        cursor = db_media.find({}, {'_id': 0})
+        cursor = db_media.find({"is_target": True}, {'_id': 0})
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
