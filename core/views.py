@@ -1,3 +1,5 @@
+from datetime import datetime, time_delta
+
 from decouple import config
 
 from django.http import JsonResponse
@@ -40,3 +42,40 @@ class ApiFeedView(View):
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
+
+
+class ApiSearchView(View):
+    def get(self, request, *args, **kwargs):
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        location = request.GET.get('location')
+        tags = request.GET.get('tags')
+
+        db_media = client.shoes.media
+        if start_date and end_date:
+            start_date = int(start_date)
+            end_date = _date_time_delta(int(end_date))
+            media = db_media.find(
+                    {'taken_at': {'$gt': start_date, '$lte': end_date}}
+            )
+            return JsonResponse(media, safe=False)
+        elif location:
+            media = db_media.find(
+                    {'$and': [
+                        {'source': 'feed'},
+                        {'location.name': {'$regex': location}}
+                    ]}
+            )
+            return JsonResponse(media, safe=False)
+        elif tags:
+            media = db_media.find(
+                    {'$and': [
+                        {'source': 'feed'},
+                        {'caption.text': {'$regex': location}}
+                    ]}
+            )
+
+
+def _date_time_delta(end_date):
+    end = datetime.fromtimestamp(end_date)
+    return (end + time_delta(days=1)).timestamp()

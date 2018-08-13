@@ -16,12 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from core.views import ApiUsersView, ApiFeedView, IndexView
+from core.views import ApiUsersView, ApiFeedView, IndexView, ApiSearchView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/users/', ApiUsersView.as_view(), name='api_users'),
     path('api/feed/', ApiFeedView.as_view(), name='api_feed'),
+    path('api/search/', ApiSearchView.as_view(), name='api_feed'),
     path('', IndexView.as_view(), name='index'),
 ]
