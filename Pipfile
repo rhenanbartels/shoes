@@ -13,6 +13,7 @@ instagramapi = "*"
 pymongo = "*"
 pillow = "*"
 django = "*"
+whitenoise = "*"
 
 
 [dev-packages]

@@ -30,6 +30,7 @@ DEBUG = config('DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 # Application definition
 
