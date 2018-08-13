@@ -85,8 +85,10 @@ def test_save_media(_get_recent_media, _vision_api):
     expected_media[0]['source'] = 'feed'
     expected_media[0]['is_target'] = True
     expected_media[0]['image_base64'] = 'base64'
+    expected_media[0].pop('id')
 
-    _get_recent_media.side_effect = [media_resp_1, media_resp_2]
+    _get_recent_media.side_effect = [deepcopy(media_resp_1[:]),
+                                     deepcopy(media_resp_2)]
     api_mock = mock.MagicMock()
 
     collection_mock = mock.MagicMock()
@@ -94,7 +96,11 @@ def test_save_media(_get_recent_media, _vision_api):
     search_feed_media(api_mock, collection_mock, user)
 
     _get_recent_media.assert_called_once_with(api_mock, user, 1440)
-    collection_mock.insert_one.assert_called_once_with(expected_media[0])
+    collection_mock.update_one.assert_called_once_with(
+            {'id': 5678},
+            {'$set': expected_media[0]},
+            upsert=True
+    )
     _vision_api.assert_called_once_with('image_url_0')
 
 
@@ -110,8 +116,10 @@ def test_save_media_only_with_shoes(_get_recent_media, _vision_api):
     expected_media_1[1]['source'] = 'feed'
     expected_media_1[0]['is_target'] = True
     expected_media_1[0]['image_base64'] = 'base64'
+    expected_media_1[0].pop('id')
 
-    _get_recent_media.side_effect = [media_resp_1, media_resp_2]
+    _get_recent_media.side_effect = [deepcopy(media_resp_1),
+                                     deepcopy(media_resp_2)]
     api_mock = mock.MagicMock()
     media_calls = [mock.call(api_mock, user, 1440)]
 
@@ -120,7 +128,11 @@ def test_save_media_only_with_shoes(_get_recent_media, _vision_api):
     search_feed_media(api_mock, collection_mock, user)
 
     _get_recent_media.assert_has_calls(media_calls)
-    collection_mock.insert_one.assert_called_once_with(expected_media_1[0])
+    collection_mock.update_one.assert_called_once_with(
+            {'id': 5678},
+            {'$set': expected_media_1[0]},
+            upsert=True
+    )
 
 
 @mock.patch('engine.commands.vision_api')
@@ -130,19 +142,23 @@ def test_save_media_from_stories(_get_stories, _vision_api):
 
     _vision_api.return_value = [True, 'base64']
     api_mock = mock.MagicMock()
-    _get_stories.side_effect = [storie_resp_1, storie_resp_2]
+    _get_stories.side_effect = [deepcopy(storie_resp_1),
+                                deepcopy(storie_resp_2)]
     collection_mock = mock.MagicMock()
 
     expected_storie = deepcopy(storie_resp_1)
     expected_storie['items'][0]['source'] = 'story'
     expected_storie['items'][0]['is_target'] = True
     expected_storie['items'][0]['image_base64'] = 'base64'
+    expected_storie['items'][0].pop('id')
 
     search_stories(api_mock, collection_mock, user)
 
     _get_stories.assert_called_once_with(api_mock, user)
-    collection_mock.insert_one.assert_called_once_with(
-            expected_storie['items'][0]
+    collection_mock.update_one.assert_called_once_with(
+            {'id': 4321},
+            {'$set': expected_storie['items'][0]},
+            upsert=True
     )
     _vision_api.assert_called_once_with('image_url_1')
 
@@ -159,23 +175,27 @@ def test_save_samples_of_non_target_images_from_feed(
     collection_mock = mock.MagicMock()
     _get_recent_media.return_value = [
             {'non_image': None},
-            {'image_versions2': {'candidates': [{'url': 'image_0'}]}},
+            {'image_versions2': {'candidates': [{'url': 'image_0'}]},
+             'id': 1234},
             {'non_image': None},
             {'non_image': None},
             {'non_image': None},
-            {'image_versions2': {'candidates': [{'url': 'image_1'}]}},
+            {'image_versions2': {'candidates': [{'url': 'image_1'}]},
+             'id': 5678},
     ]
 
     api_mock = mock.MagicMock()
     search_feed_media(api_mock, collection_mock, user)
 
-    collection_mock.insert_one.assert_called_once_with(
-            {
-             'image_versions2': {'candidates': [{'url': 'image_0'}]},
-             'source': 'feed',
-             'is_target': False,
-             'image_base64': 'base64'
-            }
+    collection_mock.update_one.assert_called_once_with(
+            {'id': 1234},
+            {'$set': {
+                'image_versions2': {'candidates': [{'url': 'image_0'}]},
+                'source': 'feed',
+                'is_target': False,
+                'image_base64': 'base64',
+            }},
+            upsert=True
     )
 
 
@@ -193,22 +213,24 @@ def test_save_samples_of_non_target_images_from_stories(
             'items':
             [{'media_type': 2},
              {'image_versions2': {'candidates': [{'url': 'image_0'}]},
-              'media_type': 1},
+              'media_type': 1, 'id': 1234},
              {'media_type': 2},
              {'media_type': 2},
              {'media_type': 2},
              {'image_versions2': {'candidates': [{'url': 'image_1'}]},
-              'media_type': 1}]}
+              'media_type': 1, 'id': 4567}]}
 
     api_mock = mock.MagicMock()
     search_stories(api_mock, collection_mock, user)
 
-    collection_mock.insert_one.assert_called_once_with(
-            {
+    collection_mock.update_one.assert_called_once_with(
+            {'id': 1234},
+            {'$set': {
              'image_versions2': {'candidates': [{'url': 'image_0'}]},
              'source': 'story',
              'is_target': False,
              'media_type': 1,
-             'image_base64': 'base64'
-            }
+             'image_base64': 'base64'}
+             },
+            upsert=True
     )

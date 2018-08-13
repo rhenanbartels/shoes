@@ -25,7 +25,8 @@ media_resp_1 = [
                 {'height': 278, 'width': 240, 'url': 'short_img_url_)'}
             ],
          'pk': 1234
-         }},
+         },
+         'id': 5678},
         {"non-image_field": None,
          'pk': 1234},
 ]
@@ -35,14 +36,16 @@ media_resp_2 = [
                 {'height': 868, 'width': 750, 'url': 'image_url_1'},
                 {'height': 278, 'width': 240, 'url': 'short_img_url_1'}
             ],
-         'pk': 5678
+         'pk': 5678,
+         'id': 4321
          }},
         {'image_versions2': {
             'candidates': [
                 {'height': 868, 'width': 750, 'url': 'image_url_2'},
                 {'height': 278, 'width': 240, 'url': 'short_img_url_2'}
             ],
-         'pk': 5678
+         'pk': 5678,
+         'id': 9876
          }}
 ]
 
@@ -54,7 +57,8 @@ storie_resp_1 = {
                     {'height': 278, 'width': 240, 'url': 'short_img_url_1'}
                     ],
                 },
-             'media_type': 1
+             'media_type': 1,
+             'id': 4321
              },
             {'image_versions2': {
                 'candidates': [
@@ -75,7 +79,8 @@ storie_resp_2 = {
                     {'height': 278, 'width': 240, 'url': 'short_img_url_3'}
                     ],
                 },
-             'media_type': 1
+             'media_type': 1,
+             'id': 9876
              },
             {'image_versions2': {
                 'candidates': [
