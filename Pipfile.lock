@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e35ebfc6a6b0bc1f7884fe0a1089806f0ca1146ebf089be5d8af181f34ff6798"
+            "sha256": "a27f78cf1e7e865f03655d4c817a8cee4755d3c6cdd43140bd9e331ac8e1fba7"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -40,6 +40,13 @@
                 "sha256:7f246078d5a546f63c28fc03ce71f4d7a23677ce42109219c24c9ffb28416137"
             ],
             "version": "==2.1"
+        },
+        "gunicorn": {
+            "hashes": [
+                "sha256:aa8e0b40b4157b36a5df5e599f45c9c76d6af43845ba3b3b0efe2c70473c2471",
+                "sha256:fa2662097c66f920f53f70621c6c58ca4a3c4d3434205e608e121b5b3b71f4f3"
+            ],
+            "version": "==19.9.0"
         },
         "imageio": {
             "hashes": [
@@ -233,6 +240,13 @@
                 "sha256:14baa7a9ea7723d46f60de5f8c6f20e840baa7e3e193bf0d9ec5fe9103a15254"
             ],
             "version": "==4.11.2"
+        },
+        "unipath": {
+            "hashes": [
+                "sha256:e6257e508d8abbfb6ddd8ec357e33589f1f48b1599127f23b017124d90b0fff7",
+                "sha256:09839adcc72e8a24d4f76d63656f30b5a1f721fc40c9bcd79d8c67bdd8b47dae"
+            ],
+            "version": "==1.1"
         },
         "whitenoise": {
             "hashes": [
