@@ -2,6 +2,7 @@ from decouple import config
 
 from django.http import JsonResponse
 from django.views import View
+from django.views.generic.base import TemplateView
 
 from core.models import client
 
@@ -15,7 +16,11 @@ def paginate(query_cursor, page, n_elements):
     return list(query_cursor.skip(start).limit(n_elements))
 
 
-class UsersView(View):
+class IndexView(TemplateView):
+    template_name = 'core/index.html'
+
+
+class ApiUsersView(View):
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
@@ -26,12 +31,12 @@ class UsersView(View):
         return JsonResponse(users, safe=False)
 
 
-class FeedView(View):
+class ApiFeedView(View):
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        cursor = db_media.find({}, {'_id': 0})
+        cursor = db_media.find({"is_target": True}, {'_id': 0})
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
