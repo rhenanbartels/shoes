@@ -6,8 +6,8 @@ from django.views import View
 from core.models import client
 
 
-N_USER_PAGE = config('N_USER_PAGE')
-N_MEDIA_PAGE = config('N_MEDIA_PAGE')
+N_USER_PAGE = config('N_USER_PAGE', cast=int)
+N_MEDIA_PAGE = config('N_MEDIA_PAGE', cast=int)
 
 
 def paginate(query_cursor, page, n_elements):
