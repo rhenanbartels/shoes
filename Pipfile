@@ -10,7 +10,10 @@ instagramapi = "*"
 pymongo = "*"
 pillow = "*"
 django = "*"
+whitenoise = "*"
 unipath = "*"
+gunicorn = "*"
+
 
 [dev-packages]
 ipdb = "*"

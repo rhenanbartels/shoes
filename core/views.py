@@ -1,3 +1,5 @@
+from decouple import config
+
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic.base import TemplateView
@@ -5,8 +7,8 @@ from django.views.generic.base import TemplateView
 from core.models import client
 
 
-N_USER_PAGE = 2
-N_MEDIA_PAGE = 2
+N_USER_PAGE = config('N_USER_PAGE')
+N_MEDIA_PAGE = config('N_MEDIA_PAGE')
 
 
 def paginate(query_cursor, page, n_elements):
