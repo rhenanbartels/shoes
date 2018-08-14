@@ -49,7 +49,7 @@ class ApiFeedView(View):
 class ApiSearchView(View):
     def get(self, request, *args, **kwargs):
 
-        media = {}
+        media = []
 
         page_num = int(request.GET.get('page', 1))
 
@@ -61,42 +61,62 @@ class ApiSearchView(View):
 
         db_media = client.shoes.media
         if start_date and end_date:
-            start_date = int(start_date)
-            end_date = _date_time_delta(int(end_date))
-            media = paginate(
-                    db_media.find({'taken_at': {'$gt': start_date,
-                                   '$lte': end_date}}, {'_id': 0}),
-                    page_num,
-                    N_MEDIA_PAGE
-                    )
+            media = _date_search(db_media, start_date, end_date, page_num,
+                                 N_MEDIA_PAGE)
         elif location:
-            loc_pattern = re.compile(location, re.IGNORECASE)
-            media = paginate(db_media.find(
-                    {'$and': [
-                        {'source': 'feed'},
-                        {'location.name': loc_pattern}
-                    ]}, {'_id': 0}),
-                    page_num,
-                    N_MEDIA_PAGE
-            )
+            media = _location_search(db_media, location, page_num,
+                                     N_MEDIA_PAGE)
         elif hashtags:
-            tags_pattern = re.compile(hashtags, re.IGNORECASE)
-            media = paginate(db_media.find(
-                {'caption.text': tags_pattern},
-                {'_id': 0}),
-                page_num,
-                N_MEDIA_PAGE
-            )
+            media = _hashtags_search(db_media, hashtags, page_num,
+                                     N_MEDIA_PAGE)
         elif username:
-            username_pattern = re.compile(username, re.IGNORECASE)
-            media = paginate(db_media.find(
-                {'user.username': username_pattern},
-                {'_id': 0}),
-                page_num,
-                N_MEDIA_PAGE
-            )
+            media = _username_search(db_media, hashtags, page_num,
+                                     N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
+
+
+def _date_search(db_media, start_date, end_date, page_num, n_media):
+    start_date = int(start_date)
+    end_date = _date_time_delta(int(end_date))
+    return paginate(
+            db_media.find({'taken_at': {'$gt': start_date,
+                           '$lte': end_date}}, {'_id': 0}),
+            page_num,
+            n_media
+    )
+
+
+def _location_search(db_media, location, page_num, n_media):
+    loc_pattern = re.compile(location, re.IGNORECASE)
+    return paginate(db_media.find(
+            {'$and': [
+                {'source': 'feed'},
+                {'location.name': loc_pattern}
+            ]}, {'_id': 0}),
+            page_num,
+            n_media
+    )
+
+
+def _hashtags_search(db_media, hashtags, page_num, n_media):
+    tags_pattern = re.compile(hashtags, re.IGNORECASE)
+    return paginate(db_media.find(
+        {'caption.text': tags_pattern},
+        {'_id': 0}),
+        page_num,
+        n_media
+    )
+
+
+def _username_search(db_media, username, page_num, n_media):
+    username_pattern = re.compile(username, re.IGNORECASE)
+    return paginate(db_media.find(
+        {'user.username': username_pattern},
+        {'_id': 0}),
+        page_num,
+        n_media
+    )
 
 
 def _date_time_delta(end_date):
