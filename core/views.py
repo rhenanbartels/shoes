@@ -73,7 +73,7 @@ class ApiSearchView(View):
             except:
                 return HttpResponseBadRequest('Hashtags must start with #')
         elif username:
-            media = _username_search(db_media, hashtags, page_num,
+            media = _username_search(db_media, username, page_num,
                                      N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
