@@ -14,12 +14,12 @@ def login():
 
 
 def send_image_aws(client, img, img_name):
-    aws_url_name = '{bucket}.{endpoint}/imagens/foto/shoes/{name}'.format(
+    aws_url_name = '{bucket}.{endpoint}/imagens/foto/shoes/{name}.jpg'.format(
             bucket='https://' + config('AWS_BUCKET_NAME'),
             endpoint=config('AWS_ENDPOINT_URL').replace('https://', ''),
             name=img_name
     )
-    aws_name = 'imagens/foto/shoes/{name}'.format(
+    aws_name = 'imagens/foto/shoes/{name}.jpg'.format(
             name=img_name
     )
     client.upload_fileobj(
