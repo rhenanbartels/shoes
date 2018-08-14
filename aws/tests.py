@@ -2,7 +2,7 @@ from unittest import mock
 
 from decouple import config
 
-from aws.client import login
+from aws.client import login, send_image_aws
 
 
 @mock.patch('aws.client.Session')
@@ -23,3 +23,18 @@ def test_login(_session):
             aws_secret_access_key=config('AWS_SECRET_KEY')
     )
     assert client is client_mock
+
+
+def test_send_image():
+    client_mock = mock.MagicMock()
+    img_mock = mock.MagicMock()
+    img_name = 'test_image'
+
+    send_image_aws(client_mock, img_mock, img_name)
+
+    client_mock.upload_fileobj.assert_called_once_with(
+            img_mock,
+            config('AWS_BUCKET_NAME'),
+            img_name,
+            ExtraArgs={"ContentType": "image/jpeg", "ACL": "public-read"}
+    )
