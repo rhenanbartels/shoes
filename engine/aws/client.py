@@ -30,3 +30,6 @@ def send_image_aws(client, img, img_name):
     )
 
     return aws_url_name
+
+
+AWS_CLIENT = login()

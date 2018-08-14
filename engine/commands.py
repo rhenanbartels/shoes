@@ -3,6 +3,7 @@ import math
 from copy import deepcopy
 from datetime import datetime
 
+from aws.client import AWS_CLIENT, send_image_aws
 from client_google_vision import vision_api
 from client_instagram import get_recent_media, get_stories
 
@@ -31,12 +32,13 @@ def search_feed_media(api, db_collection, user, delta=1440,
         # Check if media contains a photo
         if 'image_versions2' in media:
             image_url = media['image_versions2']['candidates'][0]['url']
-            is_target, image_base64 = vision_api(image_url)
+            is_target, img_obj = vision_api(image_url)
             media['source'] = 'feed'
-            media['image_base64'] = image_base64
             id_media = media.pop('id')
             if is_target:
                 media['is_target'] = is_target
+                aws_url = send_image_aws(AWS_CLIENT, img_obj, id_media)
+                media['image_aws_url'] = aws_url
                 db_collection.update_one(
                         {'id': id_media},
                         {'$set': media},
@@ -44,6 +46,8 @@ def search_feed_media(api, db_collection, user, delta=1440,
                 )
             elif count < n_non_target:
                 media['is_target'] = is_target
+                aws_url = send_image_aws(AWS_CLIENT, img_obj, id_media)
+                media['image_aws_url'] = aws_url
                 db_collection.update_one(
                         {'id': id_media},
                         {'$set': media},
@@ -60,12 +64,13 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
     for storie in stories['items']:
         if storie['media_type'] == 1:
             image_url = storie['image_versions2']['candidates'][0]['url']
-            is_target, image_base64 = vision_api(image_url)
+            is_target, img_obj = vision_api(image_url)
             storie['source'] = 'story'
-            storie['image_base64'] = image_base64
             storie_id = storie.pop('id')
             if is_target:
                 storie['is_target'] = is_target
+                aws_url = send_image_aws(AWS_CLIENT, img_obj, storie_id)
+                storie['image_aws_url'] = aws_url
                 db_collection.update_one(
                         {'id': storie_id},
                         {'$set': storie},
@@ -73,6 +78,8 @@ def search_stories(api, db_collection, user, percent_non_target=0.1):
                 )
             elif count < n_non_target:
                 storie['is_target'] = is_target
+                aws_url = send_image_aws(AWS_CLIENT, img_obj, storie_id)
+                storie['image_aws_url'] = aws_url
                 db_collection.update_one(
                         {'id': storie_id},
                         {'$set': storie},
