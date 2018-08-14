@@ -29,12 +29,22 @@ def test_send_image():
     client_mock = mock.MagicMock()
     img_mock = mock.MagicMock()
     img_name = 'test_image'
+    aws_url = '{bucket}.{endpoint}/imagens/foto/shoes/{name}'.format(
+            bucket='https://' + config('AWS_BUCKET_NAME'),
+            endpoint=config('AWS_ENDPOINT_URL').replace('https://', ''),
+            name=img_name
+    )
+    aws_name = 'imagens/foto/shoes/{name}'.format(
+            name=img_name
+    )
 
-    send_image_aws(client_mock, img_mock, img_name)
+    image_url = send_image_aws(client_mock, img_mock, img_name)
 
     client_mock.upload_fileobj.assert_called_once_with(
             img_mock,
             config('AWS_BUCKET_NAME'),
-            img_name,
+            aws_name,
             ExtraArgs={"ContentType": "image/jpeg", "ACL": "public-read"}
     )
+
+    assert image_url == aws_url
