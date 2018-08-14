@@ -1,4 +1,6 @@
-from datetime import datetime, time_delta
+import re
+
+from datetime import datetime, timedelta
 
 from decouple import config
 
@@ -46,36 +48,57 @@ class ApiFeedView(View):
 
 class ApiSearchView(View):
     def get(self, request, *args, **kwargs):
+
+        media = {}
+
+        page_num = int(request.GET.get('page', 1))
+
         start_date = request.GET.get('start_date')
         end_date = request.GET.get('end_date')
         location = request.GET.get('location')
-        tags = request.GET.get('tags')
+        hashtags = request.GET.get('hashtags')
+        username = request.GET.get('username')
 
         db_media = client.shoes.media
         if start_date and end_date:
             start_date = int(start_date)
             end_date = _date_time_delta(int(end_date))
-            media = db_media.find(
-                    {'taken_at': {'$gt': start_date, '$lte': end_date}}
-            )
-            return JsonResponse(media, safe=False)
+            media = paginate(
+                    db_media.find({'taken_at': {'$gt': start_date,
+                                   '$lte': end_date}}, {'_id': 0}),
+                    page_num,
+                    N_MEDIA_PAGE
+                    )
         elif location:
-            media = db_media.find(
+            loc_pattern = re.compile(location, re.IGNORECASE)
+            media = paginate(db_media.find(
                     {'$and': [
                         {'source': 'feed'},
-                        {'location.name': {'$regex': location}}
-                    ]}
+                        {'location.name': loc_pattern}
+                    ]}, {'_id': 0}),
+                    page_num,
+                    N_MEDIA_PAGE
             )
-            return JsonResponse(media, safe=False)
-        elif tags:
-            media = db_media.find(
-                    {'$and': [
-                        {'source': 'feed'},
-                        {'caption.text': {'$regex': location}}
-                    ]}
+        elif hashtags:
+            tags_pattern = re.compile(hashtags, re.IGNORECASE)
+            media = paginate(db_media.find(
+                {'caption.text': tags_pattern},
+                {'_id': 0}),
+                page_num,
+                N_MEDIA_PAGE
             )
+        elif username:
+            username_pattern = re.compile(username, re.IGNORECASE)
+            media = paginate(db_media.find(
+                {'user.username': username_pattern},
+                {'_id': 0}),
+                page_num,
+                N_MEDIA_PAGE
+            )
+
+        return JsonResponse(media, safe=False)
 
 
 def _date_time_delta(end_date):
     end = datetime.fromtimestamp(end_date)
-    return (end + time_delta(days=1)).timestamp()
+    return (end + timedelta(days=1)).timestamp()
