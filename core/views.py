@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from decouple import config
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from django.views import View
 from django.views.generic.base import TemplateView
 
@@ -67,8 +67,11 @@ class ApiSearchView(View):
             media = _location_search(db_media, location, page_num,
                                      N_MEDIA_PAGE)
         elif hashtags:
-            media = _hashtags_search(db_media, hashtags, page_num,
-                                     N_MEDIA_PAGE)
+            try:
+                media = _hashtags_search(db_media, hashtags, page_num,
+                                         N_MEDIA_PAGE)
+            except:
+                return HttpResponseBadRequest('Hashtags must start with #')
         elif username:
             media = _username_search(db_media, hashtags, page_num,
                                      N_MEDIA_PAGE)
@@ -88,7 +91,7 @@ def _date_search(db_media, start_date, end_date, page_num, n_media):
 
 
 def _location_search(db_media, location, page_num, n_media):
-    loc_pattern = re.compile(location, re.IGNORECASE)
+    loc_pattern = re.compile(re.escape(location), re.IGNORECASE)
     return paginate(db_media.find(
             {'$and': [
                 {'source': 'feed'},
@@ -100,6 +103,11 @@ def _location_search(db_media, location, page_num, n_media):
 
 
 def _hashtags_search(db_media, hashtags, page_num, n_media):
+    hashtags = hashtags.split('|')
+    if not all([h.startswith('#') for h in hashtags]):
+        raise Exception()
+
+    hashtags = '|'.join([re.escape(h) for h in hashtags])
     tags_pattern = re.compile(hashtags, re.IGNORECASE)
     return paginate(db_media.find(
         {'caption.text': tags_pattern},
@@ -110,7 +118,7 @@ def _hashtags_search(db_media, hashtags, page_num, n_media):
 
 
 def _username_search(db_media, username, page_num, n_media):
-    username_pattern = re.compile(username, re.IGNORECASE)
+    username_pattern = re.compile(re.escape(username), re.IGNORECASE)
     return paginate(db_media.find(
         {'user.username': username_pattern},
         {'_id': 0}),
