@@ -25,6 +25,8 @@ class IndexView(TemplateView):
 
 
 class ApiUsersView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
@@ -36,6 +38,8 @@ class ApiUsersView(View):
 
 
 class ApiFeedView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
@@ -47,6 +51,8 @@ class ApiFeedView(View):
 
 
 class ApiSearchView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
 
         media = []
