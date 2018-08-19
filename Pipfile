@@ -1,9 +1,12 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [packages]
+
 python-decouple = "*"
 requests = "*"
 instagramapi = "*"
@@ -13,9 +16,11 @@ django = "*"
 whitenoise = "*"
 unipath = "*"
 gunicorn = "*"
+"boto3" = "*"
 
 
 [dev-packages]
+
 ipdb = "*"
 pytest = "*"
 freezegun = "*"
