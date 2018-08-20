@@ -56,6 +56,16 @@ const fillImages = images => {
         $username.setAttribute('target', '_blank')
         $username.textContent = '@' + image.user.username
         $details.appendChild($username)
+        // instagram link
+        if (image.source === 'feed') {
+            let $br = document.createElement('br')
+            $details.appendChild($br)
+            let $instagramLink = document.createElement('a')
+            $instagramLink.setAttribute('href', 'http://instagram.com/p/' + image.code)
+            $instagramLink.setAttribute('target', '_blank')
+            $instagramLink.textContent = 'Ver no Instagram'
+            $details.appendChild($instagramLink)
+        }
         // likes & comments
         if (image.comment_count || image.like_count) {
             let $likesComments = document.createElement('div')
