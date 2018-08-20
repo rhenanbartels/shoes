@@ -25,6 +25,8 @@ class IndexView(TemplateView):
 
 
 class ApiUsersView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
@@ -36,17 +38,23 @@ class ApiUsersView(View):
 
 
 class ApiFeedView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        cursor = db_media.find({"is_target": True}, {'_id': 0})
+        cursor = db_media.find({"is_target": True}, {'_id': 0}).sort(
+                {'taken_at': -1}
+        )
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
 
 
 class ApiSearchView(View):
+    http_method_names = ['get']
+
     def get(self, request, *args, **kwargs):
 
         media = []
@@ -89,7 +97,9 @@ def _date_search(db_media, start_date, end_date, page_num, n_media):
     end_date = _date_time_delta(int(end_date))
     return paginate(
             db_media.find({'taken_at': {'$gt': start_date,
-                           '$lte': end_date}}, {'_id': 0}),
+                           '$lte': end_date}}, {'_id': 0}).sort(
+                               {'taken_at': -1}
+            ),
             page_num,
             n_media
     )
@@ -98,10 +108,10 @@ def _date_search(db_media, start_date, end_date, page_num, n_media):
 def _location_search(db_media, location, page_num, n_media):
     loc_pattern = re.compile(re.escape(location), re.IGNORECASE)
     return paginate(db_media.find(
-            {'$and': [
-                {'source': 'feed'},
-                {'location.name': loc_pattern}
-            ]}, {'_id': 0}),
+        {'$and': [
+            {'source': 'feed'},
+            {'location.name': loc_pattern}
+            ]}, {'_id': 0}).sort({'taken_at': -1}),
             page_num,
             n_media
     )
@@ -116,7 +126,7 @@ def _hashtags_search(db_media, hashtags, page_num, n_media):
     tags_pattern = re.compile(hashtags, re.IGNORECASE)
     return paginate(db_media.find(
         {'caption.text': tags_pattern},
-        {'_id': 0}),
+        {'_id': 0}).sort({'taken_at': -1}),
         page_num,
         n_media
     )
@@ -126,7 +136,7 @@ def _username_search(db_media, username, page_num, n_media):
     username_pattern = re.compile(re.escape(username), re.IGNORECASE)
     return paginate(db_media.find(
         {'user.username': username_pattern},
-        {'_id': 0}),
+        {'_id': 0}).sort({'taken_at': -1}),
         page_num,
         n_media
     )

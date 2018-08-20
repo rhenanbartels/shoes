@@ -3,6 +3,7 @@ let isCurrentlyLoadingNextPage = false
 let hasMorePhotosToLoad = true
 const IMAGE_CONTAINER_BOOTSTRAP_CLASS = 'col-4' // multiple of 12
 const endlessFooterAuxiliaryElement = document.querySelector('.footer-endless-scroll')
+const loadingElement = document.querySelector('#loading')
 
 const init = () => {
     fetchImages()
@@ -10,8 +11,10 @@ const init = () => {
 }
 
 const fetchImages = () => {
+    showLoading()
     fetch('/api/feed?page=' + currentPage).then(response => {
         response.json().then(data => {
+            hideLoading()
             console.log(data)
             fillImages(data)
             isCurrentlyLoadingNextPage = false
@@ -95,6 +98,14 @@ const initEndlessScrollEvent = () => {
             }
         }
     }
+}
+
+const showLoading = () => {
+    loadingElement.className = ''
+}
+
+const hideLoading = () => {
+    loadingElement.className = 'hidden'
 }
 
 init()
