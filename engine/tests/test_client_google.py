@@ -57,42 +57,51 @@ def test_crop_image():
         assert cropped_img_pil.width == expected_width
 
 
+@mock.patch('engine.client_google_vision.BytesIO', return_value='img_obj')
 @mock.patch('engine.client_google_vision.get_identified_labels')
 @mock.patch('engine.client_google_vision.crop_image',
             return_value='cropped')
 @mock.patch('engine.client_google_vision._prepare_image',
             return_value='prepared')
-@mock.patch('engine.client_google_vision.requests.get',
-            return_value='response')
-def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels):
+@mock.patch('engine.client_google_vision.requests.get')
+def test_vision_api_pipeline(_get, _prepare_image, _crop_image, _get_labels,
+                             _bytes_io):
     _get_labels.return_value = {
             'labelAnnotations': [{'description': 'shoe'}]
     }
+    content_mock = mock.MagicMock()
+    content_mock.content = 'image_content'
+    _get.return_value = content_mock
 
     is_target, b64_img = vision_api('image_url')
 
     _get.assert_called_once_with('image_url')
-    _prepare_image.assert_called_once_with('response')
+    _prepare_image.assert_called_once_with(content_mock)
     _crop_image.assert_called_once_with('prepared', (0, 1.0))
     _get_labels.assert_called_once_with('cropped')
+    _bytes_io.assert_called_once_with('image_content')
     assert is_target is True
-    assert b64_img == 'prepared'
+    assert b64_img == 'img_obj'
 
 
+@mock.patch('engine.client_google_vision.BytesIO', return_value='img_obj')
 @mock.patch('engine.client_google_vision.get_identified_labels')
 @mock.patch('engine.client_google_vision.crop_image',
             return_value='cropped')
 @mock.patch('engine.client_google_vision._prepare_image',
             return_value='prepared')
-@mock.patch('engine.client_google_vision.requests.get',
-            return_value='response')
+@mock.patch('engine.client_google_vision.requests.get')
 def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
-                                            _get_labels):
+                                            _get_labels, _bytes_io):
+
+    response_mock = mock.MagicMock()
+    response_mock.content = 'response content'
+    _get.return_value = response_mock
     _get_labels.return_value = {
             'labelAnnotations': [{'description': 'not_target'}]
     }
 
-    is_target, b64_img = vision_api('image_url')
+    is_target, img_obj = vision_api('image_url')
     crop_image_calls = [
             mock.call('prepared', (0.0, 1.0)),
             mock.call('prepared', (0.5, 1.0)),
@@ -102,13 +111,15 @@ def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
     get_labels_calls = [mock.call('cropped') for i in range(3)]
 
     _get.assert_called_once_with('image_url')
-    _prepare_image.assert_called_once_with('response')
+    _prepare_image.assert_called_once_with(response_mock)
+    _bytes_io.assert_called_once_with('response content')
     _crop_image.assert_has_calls(crop_image_calls)
     _get_labels.assert_has_calls(get_labels_calls)
     assert is_target is False
-    assert b64_img is 'prepared'
+    assert img_obj is 'img_obj'
 
 
+@mock.patch('engine.client_google_vision.BytesIO', return_value='img_obj')
 @mock.patch('engine.client_google_vision.crop_image',
             return_value='cropped')
 @mock.patch('engine.client_google_vision.get_identified_labels')
@@ -116,7 +127,7 @@ def test_vision_api_pipeline_false_response(_get, _prepare_image, _crop_image,
             return_value='prepared')
 @mock.patch('engine.client_google_vision.requests.get')
 def test_vision_api_pipeline_with_half_img(_get, _prepare_image, _get_labels,
-                                           _crop_image):
+                                           _crop_image, _bytes_io):
 
     response_mock = mock.MagicMock()
     response_mock.content = 'response content'
@@ -127,14 +138,16 @@ def test_vision_api_pipeline_with_half_img(_get, _prepare_image, _get_labels,
             {'labelAnnotations': [{'description': 'shoe'}]}
     ]
 
-    is_target, _ = vision_api('image_url')
+    is_target, img_obj = vision_api('image_url')
 
     get_labels_calls = [mock.call('prepared'), mock.call('cropped')]
     crop_image_calls = [mock.call('prepared', (0.0, 1.0)),
                         mock.call('prepared', (0.5, 1.0))]
 
     _get.assert_called_once_with('image_url')
+    _bytes_io.assert_called_once_with('response content')
     _prepare_image.assert_called_once_with(response_mock)
     _get_labels.call_args_list == get_labels_calls
     _crop_image.assert_has_calls(crop_image_calls)
     assert is_target is True
+    assert img_obj == 'img_obj'
