@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from core.views import (ApiUsersView, ApiFeedView, IndexView, ApiSearchView,
-                        ApiCustomTagsView)
+                        ApiCustomTagsView, ApiExcludeView)
 
 
 urlpatterns = [
@@ -27,5 +27,7 @@ urlpatterns = [
     path('api/search/', ApiSearchView.as_view(), name='api_feed'),
     path('api/custom_tags/<str:media_id>', ApiCustomTagsView.as_view(),
          name='api_custom_tags'),
+    path('api/exclude/<str:media_id>', ApiExcludeView.as_view(),
+         name='api_exclude'),
     path('', IndexView.as_view(), name='index'),
 ]

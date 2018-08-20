@@ -79,6 +79,29 @@ class ApiCustomTagsView(View):
             return HttpResponse('Document not found!', status=404)
 
 
+class ApiExcludeView(View):
+    http_method_names = ['put']
+
+    def put(self, request, *args, **kwargs):
+        media_id = self.kwargs['media_id']
+        db_media = client.shoes.media
+        cursor = db_media.find(
+                {'id': media_id},
+        ).limit(1)
+        try:
+            media_obj = cursor.next()
+            media_obj['false_positive'] = True
+            db_media.update_one(
+                {'id': media_id},
+                {'$set': media_obj},
+                upsert=True
+
+            )
+            return HttpResponse('OK', status=200)
+        except StopIteration:
+            return HttpResponse('Document not found!', status=404)
+
+
 class ApiSearchView(View):
     http_method_names = ['get']
 
