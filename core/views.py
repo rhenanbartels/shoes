@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from decouple import config
 
-from django.http import JsonResponse, HttpResponseBadRequest
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.views import View
 from django.views.generic.base import TemplateView
 
@@ -50,6 +50,33 @@ class ApiFeedView(View):
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
+
+
+class ApiCustomTagsView(View):
+    http_method_names = ['put']
+
+    def put(self, request, *args, **kwargs):
+        media_id = self.kwargs['media_id']
+        tags = request.GET.get('tags')
+
+        db_media = client.shoes.media
+        cursor = db_media.find(
+                {'id': media_id},
+        ).limit(1)
+        try:
+            media_obj = cursor.next()
+            tags_array = media_obj.get('custom_tags', [])
+            tags_array.extend(tags.split(','))
+            media_obj['custom_tags'] = tags_array
+            db_media.update_one(
+                {'id': media_id},
+                {'$set': media_obj},
+                upsert=True
+
+            )
+            return HttpResponse('OK', status=200)
+        except StopIteration:
+            return HttpResponse('Document not found!', status=404)
 
 
 class ApiSearchView(View):
