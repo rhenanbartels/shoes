@@ -45,7 +45,7 @@ class ApiFeedView(View):
 
         db_media = client.shoes.media
         cursor = db_media.find({"is_target": True}, {'_id': 0}).sort(
-                {'taken_at': -1}
+                [('taken_at', -1)]
         )
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
 
@@ -93,7 +93,7 @@ def _date_search(db_media, start_date, end_date, page_num, n_media):
     return paginate(
             db_media.find({'taken_at': {'$gt': start_date,
                            '$lte': end_date}}, {'_id': 0}).sort(
-                               {'taken_at': -1}
+                               [('taken_at', -1)]
             ),
             page_num,
             n_media
@@ -106,7 +106,7 @@ def _location_search(db_media, location, page_num, n_media):
         {'$and': [
             {'source': 'feed'},
             {'location.name': loc_pattern}
-            ]}, {'_id': 0}).sort({'taken_at': -1}),
+            ]}, {'_id': 0}).sort([('taken_at', -1)]),
             page_num,
             n_media
     )
@@ -121,7 +121,7 @@ def _hashtags_search(db_media, hashtags, page_num, n_media):
     tags_pattern = re.compile(hashtags, re.IGNORECASE)
     return paginate(db_media.find(
         {'caption.text': tags_pattern},
-        {'_id': 0}).sort({'taken_at': -1}),
+        {'_id': 0}).sort([('taken_at', -1)]),
         page_num,
         n_media
     )
@@ -131,7 +131,7 @@ def _username_search(db_media, username, page_num, n_media):
     username_pattern = re.compile(re.escape(username), re.IGNORECASE)
     return paginate(db_media.find(
         {'user.username': username_pattern},
-        {'_id': 0}).sort({'taken_at': -1}),
+        {'_id': 0}).sort([('taken_at', -1)]),
         page_num,
         n_media
     )
