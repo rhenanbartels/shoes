@@ -119,6 +119,7 @@ class ApiSearchView(View):
         location = request.GET.get('location')
         hashtags = request.GET.get('hashtags')
         username = request.GET.get('username')
+        custom_tags = request.GET.get('custom_tags')
 
         db_media = client.shoes.media
         if start_date and end_date:
@@ -136,6 +137,10 @@ class ApiSearchView(View):
         elif username:
             media = _username_search(db_media, username, page_num,
                                      N_MEDIA_PAGE)
+
+        elif custom_tags:
+            media = _custom_tags_search(db_media, custom_tags, page_num,
+                                        N_MEDIA_PAGE)
 
         return JsonResponse(media, safe=False)
 
@@ -193,6 +198,18 @@ def _username_search(db_media, username, page_num, n_media):
         {'_id': 0}).sort([('taken_at', -1)]),
         page_num,
         n_media
+    )
+
+
+def _custom_tags_search(db_media, custom_tags, page_num, n_media):
+    tags = custom_tags.split('|')
+    tags = '|'.join([re.compile(t) for t in tags])
+    tags_pattern = re.compile(tags, re.IGNORECASE)
+    return paginate(
+            {'custom_tags': tags_pattern},
+            {'_id': 0},
+            page_num,
+            n_media
     )
 
 

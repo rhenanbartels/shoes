@@ -11,3 +11,7 @@
 .footer-endless-scroll {
     height: 200px;
 }
+
+.hidden {
+    display: none;
+}
