@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from core.views import ApiUsersView, ApiFeedView, IndexView, ApiSearchView
+from core.views import (ApiUsersView, ApiFeedView, IndexView, ApiSearchView,
+                        ApiCustomTagsView)
 
 
 urlpatterns = [
@@ -24,5 +25,7 @@ urlpatterns = [
     path('api/users/', ApiUsersView.as_view(), name='api_users'),
     path('api/feed/', ApiFeedView.as_view(), name='api_feed'),
     path('api/search/', ApiSearchView.as_view(), name='api_feed'),
+    path('api/custom_tags/<str:media_id>', ApiCustomTagsView.as_view(),
+         name='api_custom_tags'),
     path('', IndexView.as_view(), name='index'),
 ]
