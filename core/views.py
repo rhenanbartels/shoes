@@ -44,7 +44,10 @@ class ApiFeedView(View):
         page_num = int(request.GET.get('page', 1))
 
         db_media = client.shoes.media
-        cursor = db_media.find({"is_target": True}, {'_id': 0}).sort(
+        cursor = db_media.find(
+                {'$and': [{"is_target": True},
+                          {'false_positive': {'$exists': 0}}]},
+                {'_id': 0}).sort(
                 [('taken_at', -1)]
         )
         media = paginate(cursor, page_num, N_MEDIA_PAGE)
@@ -141,8 +144,11 @@ def _date_search(db_media, start_date, end_date, page_num, n_media):
     start_date = int(start_date)
     end_date = _date_time_delta(int(end_date))
     return paginate(
-            db_media.find({'taken_at': {'$gt': start_date,
-                           '$lte': end_date}}, {'_id': 0}).sort(
+            db_media.find({'$and': [
+                {'taken_at': {'$gt': start_date,
+                              '$lte': end_date}},
+                {'false_positive': {'$exists': 0}}
+                ]}, {'_id': 0}).sort(
                                [('taken_at', -1)]
             ),
             page_num,
@@ -155,7 +161,8 @@ def _location_search(db_media, location, page_num, n_media):
     return paginate(db_media.find(
         {'$and': [
             {'source': 'feed'},
-            {'location.name': loc_pattern}
+            {'location.name': loc_pattern},
+            {'false_positive': {'$exists': 0}}
             ]}, {'_id': 0}).sort([('taken_at', -1)]),
             page_num,
             n_media
@@ -169,8 +176,9 @@ def _hashtags_search(db_media, hashtags, page_num, n_media):
 
     hashtags = '|'.join([re.escape(h) for h in hashtags])
     tags_pattern = re.compile(hashtags, re.IGNORECASE)
-    return paginate(db_media.find(
+    return paginate(db_media.find({'$and': [
         {'caption.text': tags_pattern},
+        {'false_positive': {'$exists': 0}}]},
         {'_id': 0}).sort([('taken_at', -1)]),
         page_num,
         n_media
@@ -179,8 +187,9 @@ def _hashtags_search(db_media, hashtags, page_num, n_media):
 
 def _username_search(db_media, username, page_num, n_media):
     username_pattern = re.compile(re.escape(username), re.IGNORECASE)
-    return paginate(db_media.find(
+    return paginate(db_media.find({'$and': [
         {'user.username': username_pattern},
+        {'false_positive': {'$exists': 0}}]},
         {'_id': 0}).sort([('taken_at', -1)]),
         page_num,
         n_media
