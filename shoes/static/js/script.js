@@ -33,7 +33,7 @@ const fillImages = images => {
 
     // for each image
     images.map(image => {
-        let imageUrl = 'data:image/jpg;base64,' + image.image_base64
+        let imageUrl = image.image_aws_url
 
         // create an <img>
         let $image = document.createElement('img')
