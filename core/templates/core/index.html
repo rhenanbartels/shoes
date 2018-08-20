@@ -9,6 +9,35 @@
     </head>
     <body>
         <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h1>e.sapato</h1>
+                </div>
+                <div class="col text-right">
+                    <h6>Busca</h6>
+                    <div>
+                        <select name="search_option" id="search_option">
+                            <option value="hashtags">Hashtags</option>
+                            <option value="location">Local</option>
+                            <option value="username">Usuário</option>
+                            <option value="date">Data</option>
+                        </select>
+                        <input type="text" id="search_input_text">
+                        <span id="search_input_date" class="hidden">
+                            <input type="date" id="start_date">
+                            a
+                            <input type="date" id="end_date">
+                        </span>
+                    </div>
+                    <div>
+                        <button id="do_search">Buscar</button>
+                        <button id="clear_search">Limpar busca</button>
+                    </div>
+                </div>
+            </div>
+            <div id="no-images" class="hidden">
+                <p class="text-center">Não há imagens para exibir.</p>
+            </div>
             <div id="images" class="row album"></div>
             <div class="footer-endless-scroll text-center">
                 <div id="loading">Aguarde, carregando...</div>
