@@ -107,11 +107,17 @@ const fillImages = images => {
             $details.appendChild($location)
         }
         // remove image
-        let $removeImage = document.createElement('span')
+        let $removeImage = document.createElement('div')
         $removeImage.className = 'cursor_pointer'
         $removeImage.textContent = '❌ Remover foto'
         $removeImage.onclick = e => { removePhoto(image.id, e) }
         $details.appendChild($removeImage)
+        // add tags
+        let $addTags = document.createElement('div')
+        $addTags.className = 'cursor_pointer'
+        $addTags.textContent = '➕ Adicionar tags'
+        $addTags.onclick = e => { addTags(image.id, e) }
+        $details.appendChild($addTags)
         // create a container
         let $imageContainer = document.createElement('div')
         $imageContainer.setAttribute('class', IMAGE_CONTAINER_BOOTSTRAP_CLASS)
@@ -244,15 +250,31 @@ const clearSearch = e => {
     return false
 }
 
-
 const removePhoto = (photoId, e) => {
     if (window.confirm('Tem certeza que deseja excluir esta foto?')) {
-        console.log('exclude', photoId, e)
         fetch('/api/exclude/' + photoId, {
             method: 'put',
         }).then(data => {
             console.log(data)
             e.target.parentElement.parentElement.remove()
+        })
+    }
+}
+
+const addTags = (photoId, e) => {
+    let tags = window.prompt('Entre tags para foto, separando por vírgula (por ex: sandália, salto fino):')
+    console.log(tags, e)
+    if (tags) {
+        tags = tags.split(',')
+        console.log(tags)
+        tags = tags.map(tag => tag.trim())
+        console.log(tags)
+        tags = tags.join(',')
+        console.log(tags)
+        fetch('/api/custom_tags/' + photoId + '/?tags=' + tags, {
+            method: 'put',
+        }).then(data => {
+            console.log(data)
         })
     }
 }
