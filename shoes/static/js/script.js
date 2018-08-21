@@ -212,6 +212,8 @@ const doSearch = e => {
             searchValue = searchValue.replace('@', '')
         } else if (searchOption === 'hashtags') {
             searchValue = searchValue.replace(/#/g, '').split(' ').map(t => '%23' + t).join('|')
+        } else if (searchOption === 'custom_tags') {
+            searchValue = searchValue.split(',').map(t => t.trim()).join('|')
         }
         callSearchAPI(searchOption + '=' + searchValue)
     }
@@ -271,7 +273,7 @@ const addTags = (photoId, e) => {
         console.log(tags)
         tags = tags.join(',')
         console.log(tags)
-        fetch('/api/custom_tags/' + photoId + '/?tags=' + tags, {
+        fetch('/api/custom_tags/' + photoId + '?tags=' + tags, {
             method: 'put',
         }).then(data => {
             console.log(data)
