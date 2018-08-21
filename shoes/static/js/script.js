@@ -59,6 +59,9 @@ const fillImages = images => {
         // create an <img>
         let $image = document.createElement('img')
         $image.setAttribute('src', imageUrl)
+        if (image.caption && image.caption.text) {
+            $image.setAttribute('title', image.caption.text)
+        }
 
         // create an <a>
         let $hyperlink = document.createElement('a')
@@ -97,6 +100,18 @@ const fillImages = images => {
             $storyComments.textContent = '(story)'
             $details.appendChild($storyComments)
         }
+        // location
+        if (image.location && image.location.name) {
+            let $location = document.createElement('div')
+            $location.textContent = '📍' + image.location.name
+            $details.appendChild($location)
+        }
+        // remove image
+        let $removeImage = document.createElement('span')
+        $removeImage.className = 'cursor_pointer'
+        $removeImage.textContent = '❌ Remover foto'
+        $removeImage.onclick = e => { removePhoto(image.id) }
+        $details.appendChild($removeImage)
 
         // create a container
         let $imageContainer = document.createElement('div')
@@ -148,6 +163,12 @@ const initSearchEvents = () => {
     document.getElementById('search_option').onchange = changeSearchOption
     document.getElementById('do_search').onclick = doSearch
     document.getElementById('clear_search').onclick = clearSearch
+    document.getElementById('search_input_text').onkeyup = e => {
+        e.preventDefault()
+        if (e.keyCode === 13) {
+            doSearch()
+        }
+    }
 }
 
 const changeSearchOption = e => {
@@ -220,6 +241,17 @@ const clearSearch = e => {
     fetchImages()
     e.preventDefault()
     return false
+}
+
+const removePhoto = photoId => {
+    console.log('exclude', photoId)
+    fetch('/api/exclude/' + photoId, {
+        method: 'put',
+    }).then(response => {
+        response.json().then(data => {
+            console.log(data)
+        })
+    })
 }
 
 init()
