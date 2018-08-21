@@ -110,9 +110,8 @@ const fillImages = images => {
         let $removeImage = document.createElement('span')
         $removeImage.className = 'cursor_pointer'
         $removeImage.textContent = '❌ Remover foto'
-        $removeImage.onclick = e => { removePhoto(image.id) }
+        $removeImage.onclick = e => { removePhoto(image.id, e) }
         $details.appendChild($removeImage)
-
         // create a container
         let $imageContainer = document.createElement('div')
         $imageContainer.setAttribute('class', IMAGE_CONTAINER_BOOTSTRAP_CLASS)
@@ -210,7 +209,9 @@ const doSearch = e => {
         }
         callSearchAPI(searchOption + '=' + searchValue)
     }
-    e.preventDefault()
+    if (e) {
+        e.preventDefault()
+    }
     return false
 }
 
@@ -243,15 +244,17 @@ const clearSearch = e => {
     return false
 }
 
-const removePhoto = photoId => {
-    console.log('exclude', photoId)
-    fetch('/api/exclude/' + photoId, {
-        method: 'put',
-    }).then(response => {
-        response.json().then(data => {
+
+const removePhoto = (photoId, e) => {
+    if (window.confirm('Tem certeza que deseja excluir esta foto?')) {
+        console.log('exclude', photoId, e)
+        fetch('/api/exclude/' + photoId, {
+            method: 'put',
+        }).then(data => {
             console.log(data)
+            e.target.parentElement.parentElement.remove()
         })
-    })
+    }
 }
 
 init()
