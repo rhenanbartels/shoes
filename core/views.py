@@ -5,7 +5,9 @@ from datetime import datetime, timedelta
 from decouple import config
 
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 
 from core.models import client
@@ -55,6 +57,7 @@ class ApiFeedView(View):
         return JsonResponse(media, safe=False)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ApiCustomTagsView(View):
     http_method_names = ['put']
 
@@ -82,6 +85,7 @@ class ApiCustomTagsView(View):
             return HttpResponse('Document not found!', status=404)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class ApiExcludeView(View):
     http_method_names = ['put']
 
