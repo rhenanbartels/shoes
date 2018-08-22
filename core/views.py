@@ -109,6 +109,15 @@ class ApiExcludeView(View):
             return HttpResponse('Document not found!', status=404)
 
 
+class ApiLocationsView(View):
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+        db_media = client.shoes.media
+        cities = list(db_media.distinct('location.name'))
+        return JsonResponse(cities, safe=False)
+
+
 class ApiSearchView(View):
     http_method_names = ['get']
 
