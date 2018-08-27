@@ -9,6 +9,7 @@ const loadingElement = document.querySelector('#loading')
 const noImagesToShow = document.querySelector('#no-images')
 const searchInputText = document.getElementById('search_input_text')
 const searchInputDate = document.getElementById('search_input_date')
+const locationSelect = document.getElementById('location')
 // DOM element to display the images
 let $images = document.getElementById('images')
 
@@ -16,6 +17,7 @@ const init = () => {
     fetchImages()
     initEndlessScrollEvent()
     initSearchEvents()
+    fetchLocations()
 }
 
 const fetchImages = () => {
@@ -187,9 +189,15 @@ const initSearchEvents = () => {
 const changeSearchOption = e => {
     let searchOption = document.getElementById('search_option').value
     if (searchOption === 'date') {
+        locationSelect.className = 'hidden'
         searchInputDate.className = ''
         searchInputText.className = 'hidden'
+    } else if (searchOption === 'location') {
+        locationSelect.className = ''
+        searchInputDate.className = 'hidden'
+        searchInputText.className = 'hidden'
     } else {
+        locationSelect.className = 'hidden'
         searchInputDate.className = 'hidden'
         searchInputText.className = ''
     }
@@ -205,6 +213,9 @@ const doSearch = e => {
             return false
         }
         callSearchAPI('start_date=' + getUnixDate(startDate) + '&end_date=' + getUnixDate(endDate))
+    } else if (searchOption === 'location') {
+        let location = document.getElementById('location').value
+        callSearchAPI('location=' + location)
     } else {
         let searchValue = searchInputText.value
         
@@ -251,6 +262,7 @@ const callSearchAPI = endpoint => {
 
 const clearSearch = e => {
     searchInputText.value = ''
+    locationSelect.value = ''
     emptyImages()
     isShowingSearch = false
     searchParameter = null
@@ -287,6 +299,19 @@ const addTags = (photoId, e) => {
             console.log(data)
         })
     }
+}
+
+const fetchLocations = () => {
+    fetch('/api/locations').then(response => {
+        response.json().then(locations => {
+            locations.sort().map(location => {
+                let option = document.createElement('option')
+                option.setAttribute('value', location)
+                option.textContent = location
+                locationSelect.appendChild(option)
+            })
+        })
+    })
 }
 
 init()
