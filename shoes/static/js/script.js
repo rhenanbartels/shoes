@@ -78,7 +78,7 @@ const fillImages = images => {
         $username.setAttribute('class', 'username')
         $username.setAttribute('href', 'http://instagram.com/' + image.user.username)
         $username.setAttribute('target', '_blank')
-        $username.textContent = '@' + image.user.username
+        $username.textContent = '👠 @' + image.user.username
         $details.appendChild($username)
         // instagram link
         if (image.source === 'feed') {
@@ -87,8 +87,16 @@ const fillImages = images => {
             let $instagramLink = document.createElement('a')
             $instagramLink.setAttribute('href', 'http://instagram.com/p/' + image.code)
             $instagramLink.setAttribute('target', '_blank')
-            $instagramLink.textContent = 'Ver no Instagram'
+            $instagramLink.textContent = '📸 Ver no Instagram'
             $details.appendChild($instagramLink)
+        }
+        // taken at
+        if (image.taken_at) {
+            let $br2 = document.createElement('br')
+            $details.appendChild($br2)
+            let $takenAt = document.createElement('span')
+            $takenAt.textContent = '📅 ' + new Date(image.taken_at * 1000).toLocaleString()
+            $details.appendChild($takenAt)
         }
         // likes & comments
         if (image.comment_count || image.like_count) {
@@ -97,7 +105,7 @@ const fillImages = images => {
             $details.appendChild($likesComments)
         } else {
             let $storyComments = document.createElement('div')
-            $storyComments.textContent = '(story)'
+            $storyComments.textContent = '⌛ (story)'
             $details.appendChild($storyComments)
         }
         // location
@@ -107,11 +115,17 @@ const fillImages = images => {
             $details.appendChild($location)
         }
         // remove image
-        let $removeImage = document.createElement('span')
+        let $removeImage = document.createElement('div')
         $removeImage.className = 'cursor_pointer'
         $removeImage.textContent = '❌ Remover foto'
         $removeImage.onclick = e => { removePhoto(image.id, e) }
         $details.appendChild($removeImage)
+        // add tags
+        let $addTags = document.createElement('div')
+        $addTags.className = 'cursor_pointer'
+        $addTags.textContent = '➕ Adicionar tags customizadas'
+        $addTags.onclick = e => { addTags(image.id, e) }
+        $details.appendChild($addTags)
         // create a container
         let $imageContainer = document.createElement('div')
         $imageContainer.setAttribute('class', IMAGE_CONTAINER_BOOTSTRAP_CLASS)
@@ -206,6 +220,8 @@ const doSearch = e => {
             searchValue = searchValue.replace('@', '')
         } else if (searchOption === 'hashtags') {
             searchValue = searchValue.replace(/#/g, '').split(' ').map(t => '%23' + t).join('|')
+        } else if (searchOption === 'custom_tags') {
+            searchValue = searchValue.split(',').map(t => t.trim()).join('|')
         }
         callSearchAPI(searchOption + '=' + searchValue)
     }
@@ -244,15 +260,31 @@ const clearSearch = e => {
     return false
 }
 
-
 const removePhoto = (photoId, e) => {
     if (window.confirm('Tem certeza que deseja excluir esta foto?')) {
-        console.log('exclude', photoId, e)
         fetch('/api/exclude/' + photoId, {
             method: 'put',
         }).then(data => {
             console.log(data)
             e.target.parentElement.parentElement.remove()
+        })
+    }
+}
+
+const addTags = (photoId, e) => {
+    let tags = window.prompt('Entre tags para foto, separando por vírgula (por ex: sandália, salto fino):')
+    console.log(tags, e)
+    if (tags) {
+        tags = tags.split(',')
+        console.log(tags)
+        tags = tags.map(tag => tag.trim())
+        console.log(tags)
+        tags = tags.join(',')
+        console.log(tags)
+        fetch('/api/custom_tags/' + photoId + '?tags=' + tags, {
+            method: 'put',
+        }).then(data => {
+            console.log(data)
         })
     }
 }

@@ -216,13 +216,14 @@ def _username_search(db_media, username, page_num, n_media):
 
 def _custom_tags_search(db_media, custom_tags, page_num, n_media):
     tags = custom_tags.split('|')
-    tags = '|'.join([re.compile(t) for t in tags])
+    tags = '|'.join([re.escape(t) for t in tags])
     tags_pattern = re.compile(tags, re.IGNORECASE)
-    return paginate(
-            {'custom_tags': tags_pattern},
-            {'_id': 0},
-            page_num,
-            n_media
+    return paginate(db_media.find({'$and': [
+        {'custom_tags': tags_pattern},
+        {'false_positive': {'$exists': 0}}]},
+        {'_id': 0}).sort([('taken_at', -1)]),
+        page_num,
+        n_media
     )
 
 
