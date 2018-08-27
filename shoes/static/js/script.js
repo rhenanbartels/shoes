@@ -78,7 +78,7 @@ const fillImages = images => {
         $username.setAttribute('class', 'username')
         $username.setAttribute('href', 'http://instagram.com/' + image.user.username)
         $username.setAttribute('target', '_blank')
-        $username.textContent = '@' + image.user.username
+        $username.textContent = '👠 @' + image.user.username
         $details.appendChild($username)
         // instagram link
         if (image.source === 'feed') {
@@ -87,8 +87,16 @@ const fillImages = images => {
             let $instagramLink = document.createElement('a')
             $instagramLink.setAttribute('href', 'http://instagram.com/p/' + image.code)
             $instagramLink.setAttribute('target', '_blank')
-            $instagramLink.textContent = 'Ver no Instagram'
+            $instagramLink.textContent = '📸 Ver no Instagram'
             $details.appendChild($instagramLink)
+        }
+        // taken at
+        if (image.taken_at) {
+            let $br2 = document.createElement('br')
+            $details.appendChild($br2)
+            let $takenAt = document.createElement('span')
+            $takenAt.textContent = '📅 ' + new Date(image.taken_at * 1000).toLocaleString()
+            $details.appendChild($takenAt)
         }
         // likes & comments
         if (image.comment_count || image.like_count) {
@@ -97,7 +105,7 @@ const fillImages = images => {
             $details.appendChild($likesComments)
         } else {
             let $storyComments = document.createElement('div')
-            $storyComments.textContent = '(story)'
+            $storyComments.textContent = '⌛ (story)'
             $details.appendChild($storyComments)
         }
         // location
