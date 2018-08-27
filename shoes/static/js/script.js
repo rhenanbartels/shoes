@@ -115,7 +115,7 @@ const fillImages = images => {
         // add tags
         let $addTags = document.createElement('div')
         $addTags.className = 'cursor_pointer'
-        $addTags.textContent = '➕ Adicionar tags'
+        $addTags.textContent = '➕ Adicionar tags customizadas'
         $addTags.onclick = e => { addTags(image.id, e) }
         $details.appendChild($addTags)
         // create a container
