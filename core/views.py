@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from decouple import config
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -22,7 +23,7 @@ def paginate(query_cursor, page, n_elements):
     return list(query_cursor.skip(start).limit(n_elements))
 
 
-class IndexView(TemplateView):
+class IndexView(LoginRequiredMixin, TemplateView):
     template_name = 'core/index.html'
 
 

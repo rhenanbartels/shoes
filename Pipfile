@@ -17,6 +17,9 @@ whitenoise = "*"
 unipath = "*"
 gunicorn = "*"
 "boto3" = "*"
+dj-database-url = "*"
+"psycopg2" = "*"
+"psycopg2-binary" = "*"
 
 
 [dev-packages]

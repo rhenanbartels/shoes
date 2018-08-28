@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 from unipath import Path
 
 from decouple import config, Csv
+from dj_database_url import parse as db_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -75,6 +76,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'shoes.wsgi.application'
 
+DATABASES = {
+    'default': config(
+        'DATABASE_URL',
+        default='sqlite:///' + BASE_DIR.child('db.sqlite3'),
+        cast=db_url
+    )
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -120,3 +129,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR.child('static'),
 ]
+
+LOGIN_REDIRECT_URL = 'index'
