@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
         users = list(followers) + list(followings)
         for user in users:
-            # search_feed_media(api, db_media, user)
+            search_feed_media(api, db_media, user)
             search_stories(api, db_media, user)
 
             now = datetime.utcnow().timestamp()
