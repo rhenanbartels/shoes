@@ -150,91 +150,91 @@ vision_api_target = {'responses': [{
     "labelAnnotations": [
         {
             "mid": "/m/09j5n",
-            "description": "footwear",
+            "description": "Footwear",
             "score": 0.97527814,
             "topicality": 0.97527814
             },
         {
             "mid": "/m/06rrc",
-            "description": "shoe",
+            "description": "Shoe",
             "score": 0.90856355,
             "topicality": 0.90856355
             },
         {
             "mid": "/m/035r7c",
-            "description": "leg",
+            "description": "Leg",
             "score": 0.8656675,
             "topicality": 0.8656675
             },
         {
             "mid": "/m/01dvt1",
-            "description": "joint",
+            "description": "Joint",
             "score": 0.8487657,
             "topicality": 0.8487657
             },
         {
             "mid": "/m/09w5r",
-            "description": "human leg",
+            "description": "Human leg",
             "score": 0.82455796,
             "topicality": 0.82455796
             },
         {
             "mid": "/m/0715t2",
-            "description": "calf",
+            "description": "Calf",
             "score": 0.7601689,
             "topicality": 0.7601689
             },
         {
             "mid": "/m/02p0tk3",
-            "description": "human body",
+            "description": "Human body",
             "score": 0.74117637,
             "topicality": 0.74117637
             },
         {
             "mid": "/m/0dzf4",
-            "description": "arm",
+            "description": "Arm",
             "score": 0.718239,
             "topicality": 0.718239
             },
         {
             "mid": "/m/019swr",
-            "description": "knee",
+            "description": "Knee",
             "score": 0.69414085,
             "topicality": 0.69414085
             },
         {
                 "mid": "/m/05y5lj",
-                "description": "sports equipment",
+                "description": "Sports equipment",
                 "score": 0.6789266,
                 "topicality": 0.6789266
                 },
         {
                 "mid": "/m/031n1",
-                "description": "foot",
+                "description": "Foot",
                 "score": 0.65484965,
                 "topicality": 0.65484965
                 },
         {
                 "mid": "/m/06bm2",
-                "description": "recreation",
+                "description": "Recreation",
                 "score": 0.64873284,
                 "topicality": 0.64873284
                 },
         {
                 "mid": "/m/04_fs",
-                "description": "muscle",
+                "description": "Muscle",
                 "score": 0.6399608,
                 "topicality": 0.6399608
                 },
         {
                 "mid": "/m/0hgrj75",
-                "description": "outdoor shoe",
+                "description": "Outdoor shoe",
                 "score": 0.6220674,
                 "topicality": 0.6220674
                 },
         {
                 "mid": "/m/0hr8",
-                "description": "asphalt",
+                "description": "Asphalt",
                 "score": 0.53616446,
                 "topicality": 0.53616446
                 }

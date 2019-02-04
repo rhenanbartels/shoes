@@ -48,7 +48,7 @@ def get_identified_labels(base64_image):
 
 def find_keywords(json_response):
     keys = json_response.get('labelAnnotations', [])
-    return any([key['description'] in TARGET_KEYWORDS for key in keys])
+    return any([key['description'].lower() in TARGET_KEYWORDS for key in keys])
 
 
 def crop_image(img, prop=(0.5, 1.0)):
